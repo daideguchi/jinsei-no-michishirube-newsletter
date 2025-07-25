@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登録完了 - 人生の道標</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .zen-gradient {
+            background: linear-gradient(135deg, #2C5F41 0%, #4A7C59 100%);
+        }
+        .zen-shadow {
+            box-shadow: 0 10px 25px rgba(44, 95, 65, 0.15);
+        }
+        .zen-hover:hover {
+            background: linear-gradient(135deg, #1e3d2a 0%, #3a6248 100%);
+            transform: translateY(-2px);
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center py-8">
+    <div class="max-w-md w-full mx-4">
+        <!-- 成功画面 -->
+        <div class="bg-white rounded-2xl zen-shadow p-8 fade-in">
+            <div class="text-center">
+                <div class="w-24 h-24 bg-green-100 rounded-full mx-auto mb-6 flex items-center justify-center pulse">
+                    <span class="text-green-600 text-4xl">✅</span>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">
+                    登録完了！
+                </h1>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    「人生の道標」へのご登録、誠にありがとうございます。<br>
+                    <strong class="text-green-700">明日の朝10時</strong>から7日間の智慧をお送りします。
+                </p>
+                
+                <!-- 重要な案内 -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-600 text-xl mt-1">📧</span>
+                        <div class="text-left">
+                            <p class="text-blue-800 text-sm font-medium mb-1">
+                                重要: メール受信設定について
+                            </p>
+                            <p class="text-blue-700 text-xs">
+                                メールが迷惑メールフォルダに入る場合があります。<br>
+                                <strong>noreply@jinsei-no-michishirube.com</strong><br>
+                                を受信許可リストに追加してください。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7日間の内容プレビュー -->
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                    <h3 class="text-green-800 font-semibold mb-3">📚 7日間で受け取る智慧</h3>
+                    <div class="text-left space-y-2 text-sm text-green-700">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                            <span>デジタル禅の始まり</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                            <span>情報断食で心の平静を</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                            <span>一点集中の技法</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold">4</span>
+                            <span>決断の禅</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold">5</span>
+                            <span>人間関係の調和</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold">6</span>
+                            <span>時間の禅</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-6 h-6 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold">7</span>
+                            <span>継続する力</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- アクションボタン -->
+                <div class="flex flex-col space-y-3">
+                    <button 
+                        onclick="window.close()" 
+                        class="zen-gradient text-white py-3 px-6 rounded-lg font-medium zen-hover transition-all duration-300"
+                    >
+                        閉じる
+                    </button>
+                    <a 
+                        href="https://www.youtube.com/@jinsei-no-michishirube" 
+                        target="_blank"
+                        class="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-lg font-medium transition-all duration-300"
+                    >
+                        📺 YouTubeチャンネルを見る
+                    </a>
+                </div>
+
+                <!-- フッター -->
+                <div class="text-center mt-6 pt-4 border-t">
+                    <p class="text-xs text-gray-500">
+                        何かご質問がございましたら、メールに返信してお気軽にお問い合わせください。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Google Analytics イベント送信（存在する場合）
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'conversion', {
+                'event_category': 'newsletter',
+                'event_label': 'jinsei_no_michishirube',
+                'value': 1
+            });
+        }
+
+        // 5秒後に自動的にチャンネルの宣伝を表示
+        setTimeout(() => {
+            const youtubeBtn = document.querySelector('a[href*="youtube"]');
+            if (youtubeBtn) {
+                youtubeBtn.classList.add('pulse');
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生の道標 - デジタル伽藍からの智慧 | 無料メルマガ登録</title>
+    <meta name="description" content="54歳管理職向けの人生指南メルマガ。禅の智慧とデジタル時代の生き方を融合した7日間の無料ステップメール。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .zen-gradient {
+            background: linear-gradient(135deg, #2C5F41 0%, #4A7C59 100%);
+        }
+        .zen-shadow {
+            box-shadow: 0 10px 25px rgba(44, 95, 65, 0.15);
+        }
+        .zen-hover:hover {
+            background: linear-gradient(135deg, #1e3d2a 0%, #3a6248 100%);
+            transform: translateY(-2px);
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 3s steps(20, end);
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center py-8">
+    <div class="max-w-md w-full mx-4">
+        <!-- メイン登録フォーム -->
+        <div class="bg-white rounded-2xl zen-shadow p-8 fade-in">
+            <!-- ヘッダー -->
+            <div class="text-center mb-8">
+                <div class="zen-gradient w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <span class="text-white text-2xl">🧘‍♂️</span>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800 mb-2 typing">
+                    人生の道標
+                </h1>
+                <p class="text-gray-600 text-sm mb-4">
+                    デジタル伽藍からの智慧を毎日お届け
+                </p>
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <p class="text-green-800 text-sm font-medium">
+                        ✨ 7日間の無料ステップメール
+                    </p>
+                    <p class="text-green-700 text-xs mt-1">
+                        54歳管理職のための人生指南
+                    </p>
+                </div>
+            </div>
+
+            <!-- 登録フォーム -->
+            <form id="signupForm" class="space-y-4">
+                <div>
+                    <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
+                        お名前（姓） *
+                    </label>
+                    <input
+                        type="text"
+                        id="firstName"
+                        name="firstName"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                        placeholder="山田"
+                    />
+                </div>
+
+                <div>
+                    <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
+                        お名前（名） *
+                    </label>
+                    <input
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                        placeholder="太郎"
+                    />
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        メールアドレス *
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                        placeholder="your@email.com"
+                    />
+                </div>
+
+                <!-- エラー・成功メッセージ -->
+                <div id="messageArea" class="hidden"></div>
+
+                <button
+                    type="submit"
+                    id="submitBtn"
+                    class="w-full zen-gradient text-white py-3 px-6 rounded-lg font-medium zen-hover transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                >
+                    7日間の智慧を受け取る
+                </button>
+            </form>
+
+            <!-- 特典説明 -->
+            <div class="mt-6 space-y-3">
+                <h3 class="text-lg font-semibold text-gray-800 text-center">
+                    📚 受け取れる智慧
+                </h3>
+                <div class="space-y-2">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <span class="text-sm text-gray-700">デジタル断食で心の平静を取り戻す方法</span>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <span class="text-sm text-gray-700">管理職のための禅的意思決定術</span>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <span class="text-sm text-gray-700">人間関係のストレスを解消する智慧</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- フッター -->
+            <div class="text-center mt-6 pt-4 border-t">
+                <p class="text-xs text-gray-500">
+                    ※スパムメールは送信しません<br>
+                    ※いつでも配信停止できます
+                </p>
+            </div>
+        </div>
+
+        <!-- 成功画面 -->
+        <div id="successScreen" class="bg-white rounded-2xl zen-shadow p-8 fade-in hidden">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full mx-auto mb-6 flex items-center justify-center">
+                    <span class="text-green-600 text-3xl">✅</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                    登録完了！
+                </h2>
+                <p class="text-gray-600 mb-6">
+                    「人生の道標」へのご登録ありがとうございます。<br>
+                    <strong>明日の朝10時</strong>から7日間の智慧をお送りします。
+                </p>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <p class="text-blue-800 text-sm">
+                        📧 <strong>重要:</strong> メールが迷惑メールフォルダに入る場合があります。<br>
+                        受信トレイに振り分けをお願いします。
+                    </p>
+                </div>
+                <button 
+                    onclick="window.close()" 
+                    class="zen-gradient text-white py-2 px-6 rounded-lg font-medium zen-hover transition-all duration-300"
+                >
+                    閉じる
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const messageArea = document.getElementById('messageArea');
+            const formData = new FormData(this);
+            
+            const firstName = formData.get('firstName');
+            const lastName = formData.get('lastName');
+            const email = formData.get('email');
+            
+            // ボタン無効化
+            submitBtn.disabled = true;
+            submitBtn.textContent = '登録中...';
+            
+            try {
+                // 1. Brevo API 直接呼び出し
+                const brevoResponse = await fetch('https://api.brevo.com/v3/contacts', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'api-key': 'xkeysib-eb04070a021fd9ad98a996b714cc836ad85a591fa1c921ffc172c29bd9e07e5-gs817L00dj28vAaG'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        attributes: {
+                            FIRSTNAME: firstName,
+                            LASTNAME: lastName,
+                            SIGNUP_DATE: new Date().toISOString().split('T')[0],
+                            SOURCE: 'newsletter_form'
+                        },
+                        listIds: [2],
+                        updateEnabled: true
+                    })
+                });
+                
+                console.log('Brevo response status:', brevoResponse.status);
+                
+                // Brevoエラーハンドリング（重複連絡先は成功とみなす）
+                if (!brevoResponse.ok && brevoResponse.status !== 400) {
+                    console.error('Brevo error:', await brevoResponse.text());
+                    throw new Error('メルマガ登録に失敗しました');
+                }
+
+                // 2. Formspree にバックアップデータ送信
+                try {
+                    await fetch('https://formspree.io/f/xbljnpov', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            firstName,
+                            lastName,
+                            email,
+                            timestamp: new Date().toISOString(),
+                            source: 'jinsei_no_michishirube_newsletter',
+                            brevoStatus: brevoResponse.status
+                        })
+                    });
+                } catch (formspreeError) {
+                    console.warn('Formspree backup failed:', formspreeError);
+                    // Formspreeエラーは成功を阻害しない
+                }
+
+                // 3. ウェルカムメール送信（Brevo SMTP API）
+                try {
+                    await fetch('https://api.brevo.com/v3/smtp/email', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'api-key': 'xkeysib-eb04070a021fd9ad98a996b714cc836ad85a591fa1c921ffc172c29bd9e07e5-gs817L00dj28vAaG'
+                        },
+                        body: JSON.stringify({
+                            sender: {
+                                name: '人生の道標',
+                                email: 'noreply@jinsei-no-michishirube.com'
+                            },
+                            to: [{
+                                email: email,
+                                name: `${firstName} ${lastName}`
+                            }],
+                            subject: '【人生の道標】ご登録ありがとうございます - 明日から7日間の智慧をお送りします',
+                            htmlContent: `
+                                <div style="font-family: 'Noto Sans JP', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                                    <div style="text-align: center; margin-bottom: 30px;">
+                                        <h1 style="color: #2C5F41; font-size: 24px; margin-bottom: 10px;">🧘‍♂️ 人生の道標</h1>
+                                        <p style="color: #666; font-size: 16px;">デジタル伽藍からの智慧</p>
+                                    </div>
+                                    
+                                    <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                                        <h2 style="color: #2C5F41; font-size: 20px; margin-bottom: 15px;">${firstName} ${lastName} 様</h2>
+                                        <p style="color: #333; line-height: 1.6; margin-bottom: 15px;">
+                                            「人生の道標」メルマガへのご登録、誠にありがとうございます。
+                                        </p>
+                                        <p style="color: #333; line-height: 1.6; margin-bottom: 15px;">
+                                            <strong>明日の朝10時</strong>から、7日間連続で54歳管理職のための智慧をお送りします。
+                                        </p>
+                                    </div>
+                                    
+                                    <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                                        <h3 style="color: #2C5F41; font-size: 18px; margin-bottom: 15px;">📚 7日間で受け取る智慧</h3>
+                                        <ul style="color: #333; line-height: 1.8; padding-left: 20px;">
+                                            <li>Day 1: デジタル断食で心の平静を取り戻す方法</li>
+                                            <li>Day 2: 管理職のための禅的意思決定術</li>
+                                            <li>Day 3: 人間関係のストレスを解消する智慧</li>
+                                            <li>Day 4: 忙しい毎日の中での瞑想実践</li>
+                                            <li>Day 5: 部下指導に活かす仏教の教え</li>
+                                            <li>Day 6: 定年後の人生設計と心の準備</li>
+                                            <li>Day 7: 継続的な自己成長のための習慣</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
+                                        <p style="color: #856404; font-size: 14px; margin: 0;">
+                                            <strong>📧 重要:</strong> メールが迷惑メールフォルダに振り分けられる場合があります。<br>
+                                            確実にお届けするため、受信トレイへの振り分け設定をお願いいたします。
+                                        </p>
+                                    </div>
+                                    
+                                    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+                                        <p style="color: #666; font-size: 12px;">
+                                            このメールに心当たりがない場合は、お手数ですが削除してください。<br>
+                                            配信停止をご希望の場合は、メールの最下部にある配信停止リンクをご利用ください。
+                                        </p>
+                                    </div>
+                                </div>
+                            `
+                        })
+                    });
+                } catch (emailError) {
+                    console.warn('Welcome email failed:', emailError);
+                    // ウェルカムメールエラーは成功を阻害しない
+                }
+
+                // 成功: フォームを隠して成功画面を表示
+                document.querySelector('.fade-in').style.display = 'none';
+                document.getElementById('successScreen').classList.remove('hidden');
+                
+                // Google Analytics イベント送信（存在する場合）
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'signup', {
+                        'event_category': 'newsletter',
+                        'event_label': 'jinsei_no_michishirube'
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Signup error:', error);
+                
+                // エラー表示
+                messageArea.className = 'bg-red-50 border border-red-200 rounded-lg p-3 text-red-800 text-sm';
+                messageArea.textContent = error.message || '登録に失敗しました。時間をおいて再度お試しください。';
+                messageArea.classList.remove('hidden');
+                
+                // ボタン復活
+                submitBtn.disabled = false;
+                submitBtn.textContent = '7日間の智慧を受け取る';
+            }
+        });
+
+        // フォーカス時のアニメーション
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('transform', 'scale-105');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('transform', 'scale-105');
+            });
+        });
+    </script>
+</body>
+</html>

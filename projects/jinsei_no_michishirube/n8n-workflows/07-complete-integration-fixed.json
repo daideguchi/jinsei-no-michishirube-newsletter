@@ -1,0 +1,164 @@
+{
+  "name": "Digital_Garan_Complete_Integration",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "YpzCJCLHMFMOJaJv",
+        "responseMode": "onReceived",
+        "responseData": "allEntries"
+      },
+      "id": "main-webhook",
+      "name": "Digital Garan Signup",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// データ検証と整形\nconst inputData = $input.first().json;\n\nconst processedData = {\n  firstName: inputData.firstName || '',\n  lastName: inputData.lastName || '',\n  email: inputData.email || '',\n  source: inputData.source || 'unknown',\n  signupDate: new Date().toISOString(),\n  stepProgress: 1,\n  status: 'Active',\n  persona: 'kenji-54-manager',\n  tier: 'free'\n};\n\n// バリデーション\nif (!processedData.email || !processedData.firstName) {\n  throw new Error('Required fields missing');\n}\n\nconsole.log('Processing signup:', processedData.email);\n\nreturn { json: processedData };"
+      },
+      "id": "data-processor",
+      "name": "Process Signup Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "{{ $env.GOOGLE_SHEETS_ID }}",
+        "sheetName": "Newsletter_Subscribers",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.email }}",
+            "FirstName": "={{ $json.firstName }}",
+            "LastName": "={{ $json.lastName }}",
+            "SubscriptionTier": "={{ $json.tier }}",
+            "Status": "={{ $json.status }}",
+            "StepMailProgress": "={{ $json.stepProgress }}",
+            "SignupDate": "={{ $json.signupDate }}",
+            "LastSentDate": "",
+            "Persona": "={{ $json.persona }}",
+            "Tags": "digital-garan",
+            "Source": "={{ $json.source }}"
+          }
+        }
+      },
+      "id": "sheets-append",
+      "name": "Add to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.brevo.com/v3/contacts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api-key",
+              "value": "{{ $env.BREVO_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonParameters": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "attributes",
+              "value": {
+                "FIRSTNAME": "={{ $json.firstName }}",
+                "LASTNAME": "={{ $json.lastName }}",
+                "STEP_PROGRESS": "={{ $json.stepProgress }}",
+                "SIGNUP_DATE": "={{ $json.signupDate.split('T')[0] }}",
+                "PERSONA": "={{ $json.persona }}",
+                "SOURCE": "={{ $json.source }}"
+              }
+            },
+            {
+              "name": "listIds",
+              "value": [2]
+            }
+          ]
+        }
+      },
+      "id": "brevo-add",
+      "name": "Add to Brevo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [840, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// レスポンス生成\nconst success = {\n  status: 'success',\n  message: '登録が完了しました',\n  timestamp: new Date().toISOString(),\n  data: {\n    email: $input.first().json.email,\n    firstName: $input.first().json.firstName\n  }\n};\n\nreturn { json: success };"
+      },
+      "id": "response-generator",
+      "name": "Generate Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1040, 300]
+    }
+  ],
+  "connections": {
+    "Digital Garan Signup": {
+      "main": [
+        [
+          {
+            "node": "Process Signup Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Signup Data": {
+      "main": [
+        [
+          {
+            "node": "Add to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Add to Brevo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to Brevo": {
+      "main": [
+        [
+          {
+            "node": "Generate Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

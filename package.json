@@ -1,0 +1,11 @@
+{
+  "name": "jinsei-no-michishirube-newsletter",
+  "version": "1.0.0",
+  "description": "Digital Garan Newsletter Signup System - Frontend Only",
+  "main": "index.html",
+  "scripts": {
+    "deploy": "vercel --prod"
+  },
+  "author": "Jinsei no Michishirube Team",
+  "license": "MIT"
+}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生の道標 - デジタル伽藍からの智慧 | 無料メルマガ登録</title>
+    <meta name="description" content="54歳管理職向けの人生指南メルマガ。禅の智慧とデジタル時代の生き方を融合した7日間の無料ステップメール。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .zen-gradient {
+            background: linear-gradient(135deg, #2C5F41 0%, #4A7C59 100%);
+        }
+        .zen-shadow {
+            box-shadow: 0 10px 25px rgba(44, 95, 65, 0.15);
+        }
+        .zen-hover:hover {
+            background: linear-gradient(135deg, #1e3d2a 0%, #3a6248 100%);
+            transform: translateY(-2px);
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 3s steps(20, end);
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center py-8">
+    <div class="max-w-md w-full mx-4">
+        <!-- メイン登録フォーム -->
+        <div class="bg-white rounded-2xl zen-shadow p-8 fade-in">
+            <!-- ヘッダー -->
+            <div class="text-center mb-8">
+                <div class="zen-gradient w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <span class="text-white text-2xl">🧘‍♂️</span>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800 mb-2 typing">
+                    人生の道標
+                </h1>
+                <p class="text-gray-600 text-sm mb-4">
+                    デジタル伽藍からの智慧を毎日お届け
+                </p>
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <p class="text-green-800 text-sm font-medium">
+                        ✨ 7日間の無料ステップメール
+                    </p>
+                    <p class="text-green-700 text-xs mt-1">
+                        54歳管理職のための人生指南
+                    </p>
+                </div>
+            </div>
+
+            <!-- 登録フォーム -->
+            <form action="https://formspree.io/f/xdkooayz" method="POST" id="signupForm" class="space-y-4">
+                <div>
+                    <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
+                        お名前（姓） *
+                    </label>
+                    <input
+                        type="text"
+                        id="firstName"
+                        name="firstName"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                        placeholder="山田"
+                    />
+                </div>
+
+                <div>
+                    <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
+                        お名前（名） *
+                    </label>
+                    <input
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                        placeholder="太郎"
+                    />
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        メールアドレス *
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                        placeholder="your@email.com"
+                    />
+                </div>
+
+                <!-- Hidden fields -->
+                <input type="hidden" name="_subject" value="新規メルマガ登録: 人生の道標">
+                <input type="hidden" name="_next" value="https://jinsei-no-michishirube-newsletter.vercel.app/success.html">
+                <input type="hidden" name="_language" value="ja">
+
+                <!-- エラー・成功メッセージ -->
+                <div id="messageArea" class="hidden"></div>
+
+                <button
+                    type="submit"
+                    id="submitBtn"
+                    class="w-full zen-gradient text-white py-3 px-6 rounded-lg font-medium zen-hover transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                >
+                    7日間の智慧を受け取る
+                </button>
+            </form>
+
+            <!-- 特典説明 -->
+            <div class="mt-6 space-y-3">
+                <h3 class="text-lg font-semibold text-gray-800 text-center">
+                    📚 受け取れる智慧
+                </h3>
+                <div class="space-y-2">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <span class="text-sm text-gray-700">デジタル断食で心の平静を取り戻す方法</span>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <span class="text-sm text-gray-700">管理職のための禅的意思決定術</span>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <span class="text-sm text-gray-700">人間関係のストレスを解消する智慧</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- フッター -->
+            <div class="text-center mt-6 pt-4 border-t">
+                <p class="text-xs text-gray-500">
+                    ※スパムメールは送信しません<br>
+                    ※いつでも配信停止できます
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // フォーカス時のアニメーション
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('transform', 'scale-105');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('transform', 'scale-105');
+            });
+        });
+
+        // フォーム送信時のUI改善
+        document.getElementById('signupForm').addEventListener('submit', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '登録中...';
+        });
+    </script>
+</body>
+</html>
