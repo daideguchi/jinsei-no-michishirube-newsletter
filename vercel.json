@@ -1,4 +1,6 @@
 {
+  "buildCommand": "echo 'Build completed'",
+  "outputDirectory": "./",
   "functions": {
     "api/signup.js": {
       "maxDuration": 30
