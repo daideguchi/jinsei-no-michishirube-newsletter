@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>人生の道標 - デジタル伽藍からの智慧 | 無料メルマガ登録</title>
-    <meta name="description" content="54歳管理職向けの人生指南メルマガ。禅の智慧とデジタル時代の生き方を融合した7日間の無料ステップメール。">
+    <title>人生の道標 - デジタル伽藍 | 54歳管理職のための智慧</title>
+    <meta name="description" content="デジタル伽藍から54歳管理職へ贈る人生の智慧。禅とデジタルが融合した現代の道標で、仕事と人生の新たな境地を開く。">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .zen-gradient {
             background: linear-gradient(135deg, #2C5F41 0%, #4A7C59 100%);
+        }
+        .zen-gradient-light {
+            background: linear-gradient(135deg, #E8F5E8 0%, #F0FFF0 100%);
         }
         .zen-shadow {
             box-shadow: 0 10px 25px rgba(44, 95, 65, 0.15);
@@ -16,12 +19,13 @@
         .zen-hover:hover {
             background: linear-gradient(135deg, #1e3d2a 0%, #3a6248 100%);
             transform: translateY(-2px);
+            transition: all 0.3s ease;
         }
         .fade-in {
-            animation: fadeIn 0.6s ease-in;
+            animation: fadeIn 0.8s ease-in;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .typing {
@@ -33,155 +37,278 @@
             from { width: 0; }
             to { width: 100%; }
         }
+        .garan-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(44, 95, 65, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(74, 124, 89, 0.1) 0%, transparent 50%);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center py-8">
-    <div class="max-w-md w-full mx-4">
-        <!-- メイン登録フォーム -->
-        <div class="bg-white rounded-2xl zen-shadow p-8 fade-in">
-            <!-- ヘッダー -->
-            <div class="text-center mb-8">
-                <div class="zen-gradient w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <span class="text-white text-2xl">🧘‍♂️</span>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-sm z-50 zen-shadow">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl">🧘‍♂️</span>
+                    <span class="ml-2 text-xl font-bold text-gray-800">人生の道標</span>
                 </div>
-                <h1 class="text-2xl font-bold text-gray-800 mb-2 typing">
-                    人生の道標
+                <div class="flex items-center space-x-8">
+                    <a href="#concept" class="text-gray-700 hover:text-green-600 transition-colors">デジタル伽藍とは</a>
+                    <a href="#wisdom" class="text-gray-700 hover:text-green-600 transition-colors">智慧の内容</a>
+                    <a href="#newsletter" class="text-gray-700 hover:text-green-600 transition-colors">メルマガ登録</a>
+                    <a href="#links" class="text-gray-700 hover:text-green-600 transition-colors">コンテンツ</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ヒーローセクション -->
+    <section class="pt-20 pb-16 garan-pattern">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center fade-in">
+                <div class="zen-gradient w-24 h-24 rounded-full mx-auto mb-8 flex items-center justify-center">
+                    <span class="text-white text-4xl">🏯</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                    <span class="typing">デジタル伽藍</span>
                 </h1>
-                <p class="text-gray-600 text-sm mb-4">
-                    デジタル伽藍からの智慧を毎日お届け
+                <p class="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
+                    54歳管理職のあなたへ。<br>
+                    仕事と人生の境界が曖昧になった現代において、<br>
+                    <strong class="text-green-700">禅の智慧とデジタル時代の生き方</strong>を融合した道標をお届けします
                 </p>
-                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <p class="text-green-800 text-sm font-medium">
-                        ✨ 7日間の無料ステップメール
-                    </p>
-                    <p class="text-green-700 text-xs mt-1">
-                        54歳管理職のための人生指南
-                    </p>
-                </div>
-            </div>
-
-            <!-- 登録フォーム -->
-            <form id="signupForm" class="space-y-4">
-                <div>
-                    <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
-                        お名前（姓） *
-                    </label>
-                    <input
-                        type="text"
-                        id="firstName"
-                        name="firstName"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                        placeholder="山田"
-                    />
-                </div>
-
-                <div>
-                    <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
-                        お名前（名） *
-                    </label>
-                    <input
-                        type="text"
-                        id="lastName"
-                        name="lastName"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                        placeholder="太郎"
-                    />
-                </div>
-
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        メールアドレス *
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                        placeholder="your@email.com"
-                    />
-                </div>
-
-                <!-- エラー・成功メッセージ -->
-                <div id="messageArea" class="hidden"></div>
-
-                <button
-                    type="submit"
-                    id="submitBtn"
-                    class="w-full zen-gradient text-white py-3 px-6 rounded-lg font-medium zen-hover transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                >
-                    7日間の智慧を受け取る
-                </button>
-            </form>
-
-            <!-- 特典説明 -->
-            <div class="mt-6 space-y-3">
-                <h3 class="text-lg font-semibold text-gray-800 text-center">
-                    📚 受け取れる智慧
-                </h3>
-                <div class="space-y-2">
-                    <div class="flex items-start space-x-3">
-                        <span class="text-green-500 mt-1">✓</span>
-                        <span class="text-sm text-gray-700">デジタル断食で心の平静を取り戻す方法</span>
-                    </div>
-                    <div class="flex items-start space-x-3">
-                        <span class="text-green-500 mt-1">✓</span>
-                        <span class="text-sm text-gray-700">管理職のための禅的意思決定術</span>
-                    </div>
-                    <div class="flex items-start space-x-3">
-                        <span class="text-green-500 mt-1">✓</span>
-                        <span class="text-sm text-gray-700">人間関係のストレスを解消する智慧</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- フッター -->
-            <div class="text-center mt-6 pt-4 border-t">
-                <p class="text-xs text-gray-500">
-                    ※スパムメールは送信しません<br>
-                    ※いつでも配信停止できます
-                </p>
+                <a href="#newsletter" class="zen-gradient text-white px-8 py-4 rounded-full text-lg font-semibold zen-hover inline-block">
+                    今すぐ智慧を受け取る →
+                </a>
             </div>
         </div>
+    </section>
 
-        <!-- 成功画面 -->
-        <div id="successScreen" class="bg-white rounded-2xl zen-shadow p-8 fade-in hidden">
+    <!-- デジタル伽藍とは -->
+    <section id="concept" class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">デジタル伽藍とは</h2>
+                <p class="text-xl text-gray-700 max-w-3xl mx-auto">
+                    デジタル時代の寺院。現代の管理職が直面する複雑な課題に対し、
+                    古来の禅の教えを現代的に解釈し、実践的な智慧として提供する場所です。
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center p-6 zen-gradient-light rounded-xl zen-shadow">
+                    <div class="text-4xl mb-4">🧘</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">禅の智慧</h3>
+                    <p class="text-gray-600">1000年以上受け継がれた禅の教えを、現代の管理職の課題に適用</p>
+                </div>
+                
+                <div class="text-center p-6 zen-gradient-light rounded-xl zen-shadow">
+                    <div class="text-4xl mb-4">💼</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">実践的指導</h3>
+                    <p class="text-gray-600">54歳という人生の転換期における具体的な行動指針</p>
+                </div>
+                
+                <div class="text-center p-6 zen-gradient-light rounded-xl zen-shadow">
+                    <div class="text-4xl mb-4">🌸</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">心の平静</h3>
+                    <p class="text-gray-600">デジタル時代のストレスから解放される心の在り方</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 智慧の内容 -->
+    <section id="wisdom" class="py-16 garan-pattern">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">7日間で得られる智慧</h2>
+                <p class="text-xl text-gray-700 max-w-3xl mx-auto">
+                    毎朝10時に届く、あなたの人生を変える智慧のエッセンス
+                </p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-xl zen-shadow flex items-start space-x-4">
+                    <div class="zen-gradient w-12 h-12 rounded-full flex items-center justify-center text-white font-bold">1</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">管理職としての「無我」の境地</h3>
+                        <p class="text-gray-600">エゴを捨て、チーム全体の利益を考える真のリーダーシップとは</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl zen-shadow flex items-start space-x-4">
+                    <div class="zen-gradient w-12 h-12 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">デジタル断捨離の実践</h3>
+                        <p class="text-gray-600">情報過多の時代に必要な、本当に大切なものを見極める力</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl zen-shadow flex items-start space-x-4">
+                    <div class="zen-gradient w-12 h-12 rounded-full flex items-center justify-center text-white font-bold">3</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">変化を受け入れる「諸行無常」の心</h3>
+                        <p class="text-gray-600">54歳という変化の時期を、成長の機会として捉える視点</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl zen-shadow flex items-start space-x-4">
+                    <div class="zen-gradient w-12 h-12 rounded-full flex items-center justify-center text-white font-bold">4</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">現代版「一期一会」の実践</h3>
+                        <p class="text-gray-600">リモートワーク時代における、深いつながりの築き方</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl zen-shadow flex items-start space-x-4">
+                    <div class="zen-gradient w-12 h-12 rounded-full flex items-center justify-center text-white font-bold">5</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">中道の経営哲学</h3>
+                        <p class="text-gray-600">極端に走らず、バランスを保つ持続可能な組織運営</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl zen-shadow flex items-start space-x-4">
+                    <div class="zen-gradient w-12 h-12 rounded-full flex items-center justify-center text-white font-bold">6</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">禅的時間管理術</h3>
+                        <p class="text-gray-600">「今この瞬間」に集中し、生産性を高める秘訣</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl zen-shadow flex items-start space-x-4">
+                    <div class="zen-gradient w-12 h-12 rounded-full flex items-center justify-center text-white font-bold">7</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">後進育成の「慈悲」の心</h3>
+                        <p class="text-gray-600">次世代に智慧を継承する、真の指導者としての在り方</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- メルマガ登録セクション -->
+    <section id="newsletter" class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">無料メルマガ登録</h2>
+                <p class="text-xl text-gray-700 max-w-2xl mx-auto">
+                    明日の朝10時から、7日間連続で人生を変える智慧をお届けします
+                </p>
+            </div>
+
+            <!-- メルマガ登録フォーム -->
+            <div class="max-w-md mx-auto">
+                <div class="bg-white rounded-2xl zen-shadow p-8">
+                    <form id="newsletterForm" class="space-y-6">
+                        <div>
+                            <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">お名前（姓）</label>
+                            <input type="text" id="firstName" name="firstName" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                                placeholder="田中">
+                        </div>
+                        
+                        <div>
+                            <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">お名前（名）</label>
+                            <input type="text" id="lastName" name="lastName" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                                placeholder="健司">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">メールアドレス</label>
+                            <input type="email" id="email" name="email" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                                placeholder="kenji@example.com">
+                        </div>
+                        
+                        <button type="submit" id="submitBtn"
+                            class="w-full zen-gradient text-white py-4 rounded-lg font-semibold zen-hover transition-all">
+                            7日間の智慧を受け取る
+                        </button>
+                    </form>
+                    
+                    <!-- ステータス表示 -->
+                    <div id="status" class="mt-4 text-center"></div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8 text-sm text-gray-600">
+                <p>✅ 完全無料 &nbsp;&nbsp; ✅ いつでも配信停止可能 &nbsp;&nbsp; ✅ 個人情報保護</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- コンテンツリンクセクション -->
+    <section id="links" class="py-16 garan-pattern">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">さらなる智慧を求める方へ</h2>
+                <p class="text-xl text-gray-700 max-w-3xl mx-auto">
+                    YouTubeとnoteで、さらに深い智慧と実践例を公開しています
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- YouTube -->
+                <div class="bg-white p-8 rounded-xl zen-shadow text-center">
+                    <div class="text-6xl mb-4">📺</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">YouTube</h3>
+                    <p class="text-gray-600 mb-6">
+                        デジタル伽藍の動画コンテンツ。<br>
+                        禅の智慧を現代の管理職に向けて解説
+                    </p>
+                    <a href="https://www.youtube.com/@shaka__namu" target="_blank" rel="noopener" 
+                        class="zen-gradient text-white px-6 py-3 rounded-full font-semibold zen-hover inline-block">
+                        YouTubeチャンネルを見る →
+                    </a>
+                </div>
+
+                <!-- note -->
+                <div class="bg-white p-8 rounded-xl zen-shadow text-center">
+                    <div class="text-6xl mb-4">📝</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">note</h3>
+                    <p class="text-gray-600 mb-6">
+                        より深い考察と実践記録。<br>
+                        管理職の日常に活かせる具体的な智慧
+                    </p>
+                    <a href="https://note.com/zinsei_buddha" target="_blank" rel="noopener"
+                        class="zen-gradient text-white px-6 py-3 rounded-full font-semibold zen-hover inline-block">
+                        noteを読む →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="bg-gray-900 py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
-                <div class="w-20 h-20 bg-green-100 rounded-full mx-auto mb-6 flex items-center justify-center">
-                    <span class="text-green-600 text-3xl">✅</span>
+                <div class="flex items-center justify-center mb-6">
+                    <span class="text-3xl">🧘‍♂️</span>
+                    <span class="ml-3 text-2xl font-bold text-white">人生の道標</span>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">
-                    登録完了！
-                </h2>
-                <p class="text-gray-600 mb-6">
-                    「人生の道標」へのご登録ありがとうございます。<br>
-                    <strong>明日の朝10時</strong>から7日間の智慧をお送りします。
+                <p class="text-gray-400 mb-6">
+                    デジタル伽藍 - 54歳管理職のための現代的禅の智慧
                 </p>
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                    <p class="text-blue-800 text-sm">
-                        📧 <strong>重要:</strong> メールが迷惑メールフォルダに入る場合があります。<br>
-                        受信トレイに振り分けをお願いします。
-                    </p>
+                <div class="text-sm text-gray-500">
+                    <p>&copy; 2025 人生の道標 - デジタル伽藍. All rights reserved.</p>
                 </div>
-                <button 
-                    onclick="window.close()" 
-                    class="zen-gradient text-white py-2 px-6 rounded-lg font-medium zen-hover transition-all duration-300"
-                >
-                    閉じる
-                </button>
             </div>
         </div>
-    </div>
+    </footer>
 
     <script>
-        // セキュアなサーバーサイドAPI統合（環境変数使用）
-        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitBtn = document.getElementById('submitBtn');
-            const messageArea = document.getElementById('messageArea');
+            const status = document.getElementById('status');
             const formData = new FormData(this);
             
             const firstName = formData.get('firstName');
@@ -207,48 +334,29 @@
                 });
 
                 const result = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(result.message || 'メルマガ登録に失敗しました');
-                }
 
-                console.log('Signup successful:', result);
-
-                // 成功: フォームを隠して成功画面を表示
-                document.querySelector('.fade-in').style.display = 'none';
-                document.getElementById('successScreen').classList.remove('hidden');
-                
-                // Google Analytics イベント送信（存在する場合）
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'signup', {
-                        'event_category': 'newsletter',
-                        'event_label': 'jinsei_no_michishirube'
-                    });
+                if (response.ok) {
+                    status.innerHTML = `
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                            <p class="font-semibold">✅ 登録完了！</p>
+                            <p class="text-sm">明日の朝10時から7日間、智慧をお届けします。</p>
+                        </div>
+                    `;
+                    this.reset();
+                } else {
+                    throw new Error(result.message || '登録に失敗しました');
                 }
-                
             } catch (error) {
-                console.error('Signup error:', error);
-                
-                // エラー表示
-                messageArea.className = 'bg-red-50 border border-red-200 rounded-lg p-3 text-red-800 text-sm';
-                messageArea.textContent = error.message || '登録に失敗しました。時間をおいて再度お試しください。';
-                messageArea.classList.remove('hidden');
-                
-                // ボタン復活
+                status.innerHTML = `
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        <p class="font-semibold">❌ エラーが発生しました</p>
+                        <p class="text-sm">${error.message}</p>
+                    </div>
+                `;
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = '7日間の智慧を受け取る';
             }
-        });
-
-        // フォーカス時のアニメーション
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.classList.add('transform', 'scale-105');
-            });
-            
-            input.addEventListener('blur', function() {
-                this.parentElement.classList.remove('transform', 'scale-105');
-            });
         });
     </script>
 </body>
