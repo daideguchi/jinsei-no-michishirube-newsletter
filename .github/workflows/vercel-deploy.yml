@@ -26,4 +26,6 @@ jobs:
     - name: Deploy to Vercel
       run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
       env:
+        VERCEL_ORG_ID: team_qU2jjQVZXVCwq9lXlmxu4aaM
+        VERCEL_PROJECT_ID: prj_eRMGk8pvKgbMA411fL4HhBJQH9wj
         BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
