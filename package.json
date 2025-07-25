@@ -5,8 +5,10 @@
   "main": "index.html",
   "type": "module",
   "scripts": {
+    "deploy": "vercel --prod",
     "dev": "vercel dev",
-    "deploy": "vercel --prod"
+    "build": "echo 'Build completed'",
+    "start": "vercel dev"
   },
   "dependencies": {
     "node-fetch": "^3.3.2"

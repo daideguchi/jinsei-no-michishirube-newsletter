@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'api-key': 'xkeysib-eb04070a021fd9ad98a996b714cc836ad85a591fa1c921ffc172c29bd9e07e5-gs817L00dj28vAaG'
+        'api-key': process.env.BREVO_API_KEY
       },
       body: JSON.stringify({
         email: email,

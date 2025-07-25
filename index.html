@@ -176,6 +176,7 @@
     </div>
 
     <script>
+        // セキュアなサーバーサイドAPI統合（環境変数使用）
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -192,7 +193,7 @@
             submitBtn.textContent = '登録中...';
             
             try {
-                // Vercel API Route を使用してサーバーサイド統合
+                // Vercel Function API を使用（環境変数でセキュア）
                 const response = await fetch('/api/signup', {
                     method: 'POST',
                     headers: {

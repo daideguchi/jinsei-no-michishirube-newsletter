@@ -1,4 +1,4 @@
-// Vercel API Route for Newsletter Signup - Server-side integration
+// Vercel Function for Newsletter Signup - Environment Variables Only
 export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -24,6 +24,13 @@ export default async function handler(req, res) {
       });
     }
 
+    // Check environment variables
+    if (!process.env.BREVO_API_KEY) {
+      return res.status(500).json({ 
+        error: 'Server configuration error',
+        details: 'BREVO_API_KEY not configured'
+      });
+    }
     console.log('Processing signup for:', { firstName, lastName, email });
 
     // 1. Add to Brevo
@@ -32,7 +39,7 @@ export default async function handler(req, res) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'api-key': 'xkeysib-eb04070a021fd9ad98a996b714cc836ad85a591fa1c921ffc172c29bd9e07e5-gs817L00dj28vAaG'
+        'api-key': process.env.BREVO_API_KEY
       },
       body: JSON.stringify({
         email: email,
@@ -49,7 +56,7 @@ export default async function handler(req, res) {
 
     console.log('Brevo response status:', brevoResponse.status);
 
-    // 2. Add to Formspree (backup)
+    // 2. Backup to Formspree
     try {
       await fetch('https://formspree.io/f/xbljnpov', {
         method: 'POST',
@@ -69,68 +76,49 @@ export default async function handler(req, res) {
       console.warn('Formspree backup failed:', formspreeError);
     }
 
-    // 3. Add to Google Sheets (using Google Apps Script webhook)
-    try {
-      const gasWebhookUrl = 'https://script.google.com/macros/s/AKfycbzXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/exec'; // Will be updated after deployment
-      
-      await fetch(gasWebhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          timestamp: new Date().toISOString(),
-          source: 'newsletter_form'
-        })
-      });
-    } catch (sheetsError) {
-      console.warn('Google Sheets integration failed:', sheetsError);
-    }
-
-    // 4. Send welcome email via Brevo
-    try {
-      await fetch('https://api.brevo.com/v3/smtp/email', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'api-key': 'xkeysib-eb04070a021fd9ad98a996b714cc836ad85a591fa1c921ffc172c29bd9e07e5-gs817L00dj28vAaG'
-        },
-        body: JSON.stringify({
-          sender: {
-            name: '人生の道標',
-            email: 'noreply@jinsei-no-michishirube.com'
+    // 3. Send welcome email via Brevo
+    if (brevoResponse.ok || brevoResponse.status === 400) {
+      try {
+        await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'api-key': process.env.BREVO_API_KEY
           },
-          to: [{
-            email: email,
-            name: `${firstName} ${lastName}`
-          }],
-          subject: '【人生の道標】ご登録ありがとうございます - 明日から7日間の智慧をお送りします',
-          htmlContent: `
-            <div style="font-family: 'Noto Sans JP', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <div style="text-align: center; margin-bottom: 30px;">
-                <h1 style="color: #2C5F41; font-size: 24px; margin-bottom: 10px;">🧘‍♂️ 人生の道標</h1>
-                <p style="color: #666; font-size: 16px;">デジタル伽藍からの智慧</p>
+          body: JSON.stringify({
+            sender: {
+              name: '人生の道標',
+              email: 'noreply@jinsei-no-michishirube.com'
+            },
+            to: [{
+              email: email,
+              name: `${firstName} ${lastName}`
+            }],
+            subject: '【人生の道標】ご登録ありがとうございます - 明日から7日間の智慧をお送りします',
+            htmlContent: `
+              <div style="font-family: 'Noto Sans JP', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                  <h1 style="color: #2C5F41; font-size: 24px; margin-bottom: 10px;">🧘‍♂️ 人生の道標</h1>
+                  <p style="color: #666; font-size: 16px;">デジタル伽藍からの智慧</p>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                  <h2 style="color: #2C5F41; font-size: 20px; margin-bottom: 15px;">${firstName} ${lastName} 様</h2>
+                  <p style="color: #333; line-height: 1.6; margin-bottom: 15px;">
+                    「人生の道標」メルマガへのご登録、誠にありがとうございます。
+                  </p>
+                  <p style="color: #333; line-height: 1.6; margin-bottom: 15px;">
+                    <strong>明日の朝10時</strong>から、7日間連続で54歳管理職のための智慧をお送りします。
+                  </p>
+                </div>
               </div>
-              
-              <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
-                <h2 style="color: #2C5F41; font-size: 20px; margin-bottom: 15px;">${firstName} ${lastName} 様</h2>
-                <p style="color: #333; line-height: 1.6; margin-bottom: 15px;">
-                  「人生の道標」メルマガへのご登録、誠にありがとうございます。
-                </p>
-                <p style="color: #333; line-height: 1.6; margin-bottom: 15px;">
-                  <strong>明日の朝10時</strong>から、7日間連続で54歳管理職のための智慧をお送りします。
-                </p>
-              </div>
-            </div>
-          `
-        })
-      });
-    } catch (emailError) {
-      console.warn('Welcome email failed:', emailError);
+            `
+          })
+        });
+      } catch (emailError) {
+        console.warn('Welcome email failed:', emailError);
+      }
     }
 
     // Success response
