@@ -56,7 +56,40 @@ export default async function handler(req, res) {
 
     console.log('Brevo response status:', brevoResponse.status);
 
-    // 2. Backup to Formspree
+    // 2. Add to Google Sheets
+    try {
+      const SHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2PztM';
+      const GOOGLE_SHEETS_API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
+      
+      if (GOOGLE_SHEETS_API_KEY) {
+        const sheetsResponse = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1:append?valueInputOption=RAW&key=${GOOGLE_SHEETS_API_KEY}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              values: [[
+                email,
+                firstName,
+                lastName,
+                new Date().toISOString(),
+                'newsletter_form',
+                'pending', // status
+                '', // list_name
+                '' // step_status
+              ]]
+            })
+          }
+        );
+        console.log('Google Sheets response:', sheetsResponse.status);
+      }
+    } catch (sheetsError) {
+      console.warn('Google Sheets sync failed:', sheetsError);
+    }
+
+    // 3. Backup to Formspree
     try {
       await fetch('https://formspree.io/f/xbljnpov', {
         method: 'POST',
@@ -76,8 +109,8 @@ export default async function handler(req, res) {
       console.warn('Formspree backup failed:', formspreeError);
     }
 
-    // 3. Send welcome email via Brevo
-    if (brevoResponse.ok || brevoResponse.status === 400) {
+    // 4. Send welcome email via Brevo (force send for all cases)
+    if (true) {
       try {
         await fetch('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
@@ -89,7 +122,7 @@ export default async function handler(req, res) {
           body: JSON.stringify({
             sender: {
               name: '人生の道標',
-              email: 'noreply@jinsei-no-michishirube.com'
+              email: 'daideguchisho@gmail.com'
             },
             to: [{
               email: email,
@@ -109,7 +142,7 @@ export default async function handler(req, res) {
                     「人生の道標」メルマガへのご登録、誠にありがとうございます。
                   </p>
                   <p style="color: #333; line-height: 1.6; margin-bottom: 15px;">
-                    <strong>明日の朝10時</strong>から、7日間連続で54歳管理職のための智慧をお送りします。
+                    <strong>明日の朝10時</strong>から、7日間連続であなたの心を豊かにする智慧をお送りします。
                   </p>
                 </div>
               </div>
