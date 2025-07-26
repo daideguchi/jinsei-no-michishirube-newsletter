@@ -131,8 +131,8 @@ export default async function handler(req, res) {
           },
           body: JSON.stringify({
             sender: {
-              name: '人生の道標',
-              email: 'dd.1107.11107@gmail.com'
+              name: '人生の道標 - デジタル伽藍',
+              email: 'noreply@jinsei-michishirube.com'
             },
             to: [{
               email: email,
@@ -153,6 +153,14 @@ export default async function handler(req, res) {
                   </p>
                   <p style="color: #333; line-height: 1.6; margin-bottom: 15px;">
                     <strong>明日の朝10時</strong>から、7日間連続であなたの心を豊かにする智慧をお送りします。
+                  </p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                  <p style="color: #888; font-size: 12px;">人生の道標 | デジタル伽藍</p>
+                  <p style="color: #888; font-size: 11px; margin-top: 10px;">
+                    ※このメールは送信専用アドレスから配信されております。<br>
+                    返信はできませんので、ご了承ください。
                   </p>
                 </div>
               </div>

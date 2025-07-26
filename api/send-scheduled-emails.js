@@ -41,29 +41,39 @@ async function getActiveSubscribers() {
   const SHEET_ID = process.env.GOOGLE_SHEET_ID || '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2PztM';
   const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
   
-  const response = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A2:J1000?key=${API_KEY}`
-  );
-  
-  if (!response.ok) {
-    throw new Error(`スプレッドシート読み込み失敗: ${response.status}`);
+  if (!API_KEY) {
+    console.warn('GOOGLE_SHEETS_API_KEY not configured');
+    return [];
   }
   
-  const data = await response.json();
-  const rows = data.values || [];
-  
-  return rows
-    .filter(row => row[5] === 'active') // Status列が'active'
-    .map(row => ({
-      email: row[0],
-      firstName: row[1],
-      lastName: row[2],
-      signupDate: new Date(row[3]),
-      currentStep: parseInt(row[6]) || 0,
-      lastEmailSent: row[7] ? new Date(row[7]) : null,
-      daysSinceSignup: Math.floor((new Date() - new Date(row[3])) / (1000 * 60 * 60 * 24))
-    }))
-    .filter(sub => sub.email && sub.firstName && sub.lastName);
+  try {
+    const response = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A2:J1000?key=${API_KEY}`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`Google Sheets読み込み失敗: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const rows = data.values || [];
+    
+    return rows
+      .filter(row => row[5] === 'active') // Status列が'active'
+      .map(row => ({
+        email: row[0],
+        firstName: row[1],
+        lastName: row[2],
+        signupDate: new Date(row[3]),
+        currentStep: parseInt(row[6]) || 0,
+        lastEmailSent: row[7] ? new Date(row[7]) : null,
+        daysSinceSignup: Math.floor((new Date() - new Date(row[3])) / (1000 * 60 * 60 * 24))
+      }))
+      .filter(sub => sub.email && sub.firstName && sub.lastName);
+  } catch (error) {
+    console.error('Google Sheets読み込みエラー:', error);
+    return [];
+  }
 }
 
 async function processBatchEmails(subscribers) {
@@ -160,8 +170,8 @@ async function sendBrevoEmail(email, firstName, lastName, subject, htmlContent, 
       },
       body: JSON.stringify({
         sender: {
-          name: '人生の道標',
-          email: 'dd.1107.11107@gmail.com'
+          name: '人生の道標 - デジタル伽藍',
+          email: 'noreply@jinsei-michishirube.com'
         },
         to: [{
           email: email,
@@ -203,6 +213,8 @@ async function updateSubscriberStep(email, templateId) {
     const SHEET_ID = process.env.GOOGLE_SHEET_ID || '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2PztM';
     const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
     
+    if (!API_KEY) return;
+    
     // まず該当行を特定
     const response = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A2:J1000?key=${API_KEY}`
@@ -232,8 +244,10 @@ async function updateSubscriberStep(email, templateId) {
       }
     );
     
+    console.log(`✅ Google Sheets更新完了: ${email} → Step ${step}`);
+    
   } catch (error) {
-    console.error('ステップ更新エラー:', error);
+    console.error('Google Sheetsステップ更新エラー:', error);
   }
 }
 
