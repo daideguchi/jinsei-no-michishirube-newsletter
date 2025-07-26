@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分析 - 人生の道標</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(180deg, #1f2937 0%, #374151 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="admin-sidebar shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl">🛡️</span>
+                    <span class="ml-2 text-xl font-bold text-white">人生の道標 管理者画面</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="/admin/dashboard" class="text-gray-300 hover:text-white">📊 ダッシュボード</a>
+                    <a href="/admin/email-templates" class="text-gray-300 hover:text-white">✉️ メールテンプレート</a>
+                    <a href="/admin/subscribers" class="text-gray-300 hover:text-white">👥 読者管理</a>
+                    <a href="/admin/analytics" class="text-white font-semibold">📈 分析</a>
+                    <a href="/admin/settings" class="text-gray-300 hover:text-white">⚙️ 設定</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">📈 分析ダッシュボード</h1>
+            <p class="text-gray-600 mt-2">メルマガパフォーマンスの詳細分析</p>
+        </div>
+
+        <!-- パフォーマンス指標 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <span class="text-3xl">📧</span>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">総配信数</p>
+                        <p class="text-2xl font-bold text-gray-900" id="totalSent">読み込み中...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <span class="text-3xl">👁️</span>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">平均開封率</p>
+                        <p class="text-2xl font-bold text-blue-600" id="avgOpenRate">読み込み中...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <span class="text-3xl">🖱️</span>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">平均クリック率</p>
+                        <p class="text-2xl font-bold text-green-600" id="avgClickRate">読み込み中...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <span class="text-3xl">📈</span>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">成長率</p>
+                        <p class="text-2xl font-bold text-purple-600" id="growthRate">読み込み中...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- チャート -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">📊 月別パフォーマンス</h3>
+                <canvas id="performanceChart" width="400" height="200"></canvas>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">👥 読者増加推移</h3>
+                <canvas id="growthChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="mt-4 text-sm text-gray-500 text-center">
+            最終更新: <span id="lastUpdated">-</span>
+        </div>
+    </div>
+
+    <script>
+        function loadAnalytics() {
+            fetch('/api/admin/stats')
+                .then(response => response.json())
+                .then(data => {
+                    // 基本統計更新
+                    document.getElementById('totalSent').textContent = data.monthlyEmails || 0;
+                    document.getElementById('avgOpenRate').textContent = data.openRate || '0%';
+                    document.getElementById('avgClickRate').textContent = data.clickRate || '0%';
+                    document.getElementById('growthRate').textContent = '+5.2%'; // 計算ロジック追加予定
+                    document.getElementById('lastUpdated').textContent = data.lastUpdated;
+                })
+                .catch(error => {
+                    console.error('分析データ取得エラー:', error);
+                });
+        }
+
+        // チャート初期化
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(performanceCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
+                datasets: [{
+                    label: '開封率',
+                    data: [25, 28, 32, 30, 35, 33, 36],
+                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 1
+                }, {
+                    label: 'クリック率',
+                    data: [5, 6, 8, 7, 9, 8, 10],
+                    backgroundColor: 'rgba(34, 197, 94, 0.5)',
+                    borderColor: 'rgb(34, 197, 94)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 50
+                    }
+                }
+            }
+        });
+
+        const growthCtx = document.getElementById('growthChart').getContext('2d');
+        const growthChart = new Chart(growthCtx, {
+            type: 'line',
+            data: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
+                datasets: [{
+                    label: '読者数',
+                    data: [100, 150, 200, 280, 350, 420, 500],
+                    borderColor: 'rgb(147, 51, 234)',
+                    backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // 初回読み込み
+        loadAnalytics();
+        
+        // 10分ごとに更新
+        setInterval(loadAnalytics, 10 * 60 * 1000);
+    </script>
+</body>
+</html>

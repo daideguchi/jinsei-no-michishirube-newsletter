@@ -7,6 +7,21 @@
     },
     "api/send-scheduled-emails.js": {
       "maxDuration": 60
+    },
+    "api/admin/email-templates-list.js": {
+      "maxDuration": 30
+    },
+    "api/admin/email-template.js": {
+      "maxDuration": 30
+    },
+    "api/admin/send-test-email.js": {
+      "maxDuration": 30
+    },
+    "api/admin/auth.js": {
+      "maxDuration": 10
+    },
+    "api/admin/recent-activity.js": {
+      "maxDuration": 30
     }
   },
   "crons": [
@@ -17,8 +32,44 @@
   ],
   "rewrites": [
     {
+      "source": "/admin",
+      "destination": "/admin/login.html"
+    },
+    {
+      "source": "/admin/login",
+      "destination": "/admin/login.html"
+    },
+    {
       "source": "/",
       "destination": "/index.html"
+    },
+    {
+      "source": "/admin/dashboard",
+      "destination": "/admin/dashboard.html"
+    },
+    {
+      "source": "/admin/email-templates",
+      "destination": "/admin/email-templates.html"
+    },
+    {
+      "source": "/admin/settings",
+      "destination": "/admin/settings.html"
+    },
+    {
+      "source": "/admin/subscribers",
+      "destination": "/admin/subscribers.html"
+    },
+    {
+      "source": "/admin/analytics",
+      "destination": "/admin/analytics.html"
+    },
+    {
+      "source": "/admin/subscribers",
+      "destination": "/admin/subscribers.html"
+    },
+    {
+      "source": "/admin/analytics",
+      "destination": "/admin/analytics.html"
     }
   ]
 }

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>システム設定 - 人生の道標</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .zen-gradient {
+            background: linear-gradient(135deg, #2C5F41 0%, #4A7C59 100%);
+        }
+        .admin-sidebar {
+            background: linear-gradient(180deg, #1f2937 0%, #374151 100%);
+        }
+        .setting-card {
+            transition: all 0.3s ease;
+        }
+        .setting-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="admin-sidebar shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl">🛡️</span>
+                    <span class="ml-2 text-xl font-bold text-white">人生の道標 管理者画面</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="/admin/dashboard" class="text-gray-300 hover:text-white">📊 ダッシュボード</a>
+                    <a href="/admin/email-templates" class="text-gray-300 hover:text-white">✉️ メールテンプレート</a>
+                    <a href="/admin/subscribers" class="text-gray-300 hover:text-white">👥 読者管理</a>
+                    <a href="/admin/analytics" class="text-gray-300 hover:text-white">📈 分析</a>
+                    <a href="/admin/settings" class="text-white font-semibold">⚙️ 設定</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- ヘッダー -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">⚙️ システム設定</h1>
+            <p class="text-gray-600 mt-2">メルマガシステムの各種設定を管理</p>
+        </div>
+
+        <!-- タブナビゲーション -->
+        <div class="border-b border-gray-200 mb-8">
+            <nav class="-mb-px flex space-x-8">
+                <button onclick="showTab('brevo')" id="brevoTab" class="border-b-2 border-green-500 py-2 px-1 text-sm font-medium text-green-600">
+                    📧 Brevo設定
+                </button>
+                <button onclick="showTab('sheets')" id="sheetsTab" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                    📊 Google Sheets設定
+                </button>
+                <button onclick="showTab('automation')" id="automationTab" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                    🤖 自動化設定
+                </button>
+                <button onclick="showTab('security')" id="securityTab" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                    🔒 セキュリティ
+                </button>
+            </nav>
+        </div>
+
+        <!-- Brevo設定タブ -->
+        <div id="brevoContent" class="space-y-8">
+            <!-- API設定 -->
+            <div class="setting-card bg-white rounded-xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">🔑 Brevo API設定</h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">APIキー</label>
+                        <div class="flex space-x-3">
+                            <input type="password" id="brevoApiKey" class="flex-1 border-gray-300 rounded-lg px-3 py-2"
+                                   placeholder="xkeysib-..." value="••••••••••••••••••••">
+                            <button onclick="testBrevoApi()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                🧪 テスト
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Brevoアカウントの設定 > APIキーから取得</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">送信者名</label>
+                        <input type="text" id="senderName" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                               value="人生の道標 - デジタル伽藍">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">送信者メールアドレス</label>
+                        <input type="email" id="senderEmail" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                               value="noreply@jinsei-michishirube.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">デフォルトリストID</label>
+                        <input type="number" id="defaultListId" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                               value="2" placeholder="BrevoのコンタクトリストID">
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t">
+                    <h4 class="font-semibold text-gray-900 mb-4">📊 接続状況</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-4 bg-green-50 rounded-lg">
+                            <div class="text-sm text-green-800 font-medium">API接続</div>
+                            <div class="text-lg font-bold text-green-600" id="apiStatus">✅ 正常</div>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <div class="text-sm text-blue-800 font-medium">今月送信数</div>
+                            <div class="text-lg font-bold text-blue-600" id="monthlyCount">342 / 9,000</div>
+                        </div>
+                        <div class="p-4 bg-purple-50 rounded-lg">
+                            <div class="text-sm text-purple-800 font-medium">残りクレジット</div>
+                            <div class="text-lg font-bold text-purple-600" id="remainingCredits">8,658</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex space-x-4">
+                    <button onclick="saveBrevoSettings()" class="zen-gradient text-white px-6 py-3 rounded-lg hover:opacity-90">
+                        💾 設定を保存
+                    </button>
+                    <button onclick="syncBrevoContacts()" class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50">
+                        🔄 コンタクト同期
+                    </button>
+                </div>
+            </div>
+
+            <!-- メール配信設定 -->
+            <div class="setting-card bg-white rounded-xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">📮 メール配信設定</h3>
+                
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">配信時間</label>
+                            <select class="w-full border-gray-300 rounded-lg">
+                                <option value="10">10:00 (推奨)</option>
+                                <option value="9">09:00</option>
+                                <option value="11">11:00</option>
+                                <option value="19">19:00</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">タイムゾーン</label>
+                            <select class="w-full border-gray-300 rounded-lg">
+                                <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                                <option value="UTC">UTC</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">配信頻度制限</label>
+                        <div class="flex items-center space-x-4">
+                            <input type="number" value="1" class="w-20 border-gray-300 rounded-lg px-3 py-2">
+                            <span class="text-gray-600">通/日 (同一読者への配信上限)</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" checked class="rounded border-gray-300 text-green-600">
+                            <span class="ml-2 text-sm text-gray-700">ウェルカムメール自動送信</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" checked class="rounded border-gray-300 text-green-600">
+                            <span class="ml-2 text-sm text-gray-700">ステップメール自動送信</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Google Sheets設定タブ -->
+        <div id="sheetsContent" class="space-y-8 hidden">
+            <div class="setting-card bg-white rounded-xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">📊 Google Sheets連携設定</h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">スプレッドシートID</label>
+                        <input type="text" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                               value="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2PztM" readonly>
+                        <p class="text-xs text-gray-500 mt-1">Google SheetsのURLから自動取得</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">APIキー</label>
+                        <div class="flex space-x-3">
+                            <input type="password" class="flex-1 border-gray-300 rounded-lg px-3 py-2"
+                                   value="••••••••••••••••••••" readonly>
+                            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                                🔄 更新
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">読者データシート名</label>
+                            <input type="text" class="w-full border-gray-300 rounded-lg px-3 py-2" 
+                                   value="newsletter_subscribers">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">テンプレートシート名</label>
+                            <input type="text" class="w-full border-gray-300 rounded-lg px-3 py-2" 
+                                   value="Email_Templates">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">同期間隔</label>
+                        <select class="w-full border-gray-300 rounded-lg">
+                            <option value="5">5分ごと</option>
+                            <option value="15" selected>15分ごと (推奨)</option>
+                            <option value="30">30分ごと</option>
+                            <option value="60">1時間ごと</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t">
+                    <h4 class="font-semibold text-gray-900 mb-4">📈 同期状況</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="p-4 bg-green-50 rounded-lg">
+                            <div class="text-sm text-green-800 font-medium">最終同期</div>
+                            <div class="text-sm font-bold text-green-600">5分前</div>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <div class="text-sm text-blue-800 font-medium">総読者数</div>
+                            <div class="text-sm font-bold text-blue-600">1,247名</div>
+                        </div>
+                        <div class="p-4 bg-purple-50 rounded-lg">
+                            <div class="text-sm text-purple-800 font-medium">テンプレート数</div>
+                            <div class="text-sm font-bold text-purple-600">4個</div>
+                        </div>
+                        <div class="p-4 bg-yellow-50 rounded-lg">
+                            <div class="text-sm text-yellow-800 font-medium">エラー数</div>
+                            <div class="text-sm font-bold text-yellow-600">0件</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 自動化設定タブ -->
+        <div id="automationContent" class="space-y-8 hidden">
+            <div class="setting-card bg-white rounded-xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">🤖 自動化設定</h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-4">📧 ステップメール設定</h4>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 border rounded-lg">
+                                <div>
+                                    <div class="font-medium">Day 1 - 心を整える智慧</div>
+                                    <div class="text-sm text-gray-600">登録から1日後に送信</div>
+                                </div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" checked class="rounded border-gray-300 text-green-600">
+                                    <span class="ml-2 text-sm">有効</span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 border rounded-lg">
+                                <div>
+                                    <div class="font-medium">Day 3 - 人間関係の智慧</div>
+                                    <div class="text-sm text-gray-600">登録から3日後に送信</div>
+                                </div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" checked class="rounded border-gray-300 text-green-600">
+                                    <span class="ml-2 text-sm">有効</span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 border rounded-lg">
+                                <div>
+                                    <div class="font-medium">Day 7 - 一週間の振り返り</div>
+                                    <div class="text-sm text-gray-600">登録から7日後に送信</div>
+                                </div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" checked class="rounded border-gray-300 text-green-600">
+                                    <span class="ml-2 text-sm">有効</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-4">⏰ 配信スケジュール</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">実行間隔</label>
+                                <select class="w-full border-gray-300 rounded-lg">
+                                    <option value="hourly" selected>1時間ごと</option>
+                                    <option value="daily">1日1回</option>
+                                    <option value="manual">手動のみ</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">最大送信数/回</label>
+                                <input type="number" value="50" class="w-full border-gray-300 rounded-lg px-3 py-2">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">送信間隔(秒)</label>
+                                <input type="number" value="2" class="w-full border-gray-300 rounded-lg px-3 py-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- セキュリティ設定タブ -->
+        <div id="securityContent" class="space-y-8 hidden">
+            <div class="setting-card bg-white rounded-xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">🔒 セキュリティ設定</h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-4">🔐 アクセス制御</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">管理者パスワード</label>
+                                <div class="flex space-x-3">
+                                    <input type="password" class="flex-1 border-gray-300 rounded-lg px-3 py-2"
+                                           placeholder="新しいパスワード">
+                                    <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                                        🔄 変更
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" checked class="rounded border-gray-300 text-green-600">
+                                    <span class="ml-2 text-sm text-gray-700">2段階認証を有効にする</span>
+                                </label>
+                            </div>
+
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-green-600">
+                                    <span class="ml-2 text-sm text-gray-700">IPアドレス制限を有効にする</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-4">📝 監査ログ</h4>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="text-sm space-y-2">
+                                <div class="flex justify-between">
+                                    <span>管理者ログイン</span>
+                                    <span class="text-gray-600">2025-07-26 18:30</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Brevo設定変更</span>
+                                    <span class="text-gray-600">2025-07-26 15:22</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>テンプレート更新</span>
+                                    <span class="text-gray-600">2025-07-26 12:45</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-4">🔄 バックアップ</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 border rounded-lg">
+                                <div class="font-medium mb-2">自動バックアップ</div>
+                                <div class="text-sm text-gray-600 mb-3">毎日午前2時に実行</div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" checked class="rounded border-gray-300 text-green-600">
+                                    <span class="ml-2 text-sm">有効</span>
+                                </label>
+                            </div>
+                            
+                            <div class="p-4 border rounded-lg">
+                                <div class="font-medium mb-2">手動バックアップ</div>
+                                <div class="text-sm text-gray-600 mb-3">最終: 2025-07-26 02:00</div>
+                                <button class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">
+                                    今すぐ実行
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // タブ切り替え機能
+        function showTab(tabName) {
+            // すべてのタブコンテンツを隠す
+            document.getElementById('brevoContent').classList.add('hidden');
+            document.getElementById('sheetsContent').classList.add('hidden');
+            document.getElementById('automationContent').classList.add('hidden');
+            document.getElementById('securityContent').classList.add('hidden');
+            
+            // すべてのタブのスタイルをリセット
+            document.getElementById('brevoTab').className = 'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700';
+            document.getElementById('sheetsTab').className = 'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700';
+            document.getElementById('automationTab').className = 'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700';
+            document.getElementById('securityTab').className = 'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700';
+            
+            // 選択されたタブを表示
+            document.getElementById(tabName + 'Content').classList.remove('hidden');
+            document.getElementById(tabName + 'Tab').className = 'border-b-2 border-green-500 py-2 px-1 text-sm font-medium text-green-600';
+        }
+
+        // Brevo API テスト
+        async function testBrevoApi() {
+            try {
+                const response = await fetch('/api/admin/test-brevo');
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('apiStatus').innerHTML = '✅ 正常';
+                    document.getElementById('monthlyCount').textContent = `${result.sent} / ${result.limit}`;
+                    alert('✅ Brevo API接続成功');
+                } else {
+                    document.getElementById('apiStatus').innerHTML = '❌ エラー';
+                    alert('❌ 接続失敗: ' + result.error);
+                }
+            } catch (error) {
+                alert('❌ テスト失敗: ' + error.message);
+            }
+        }
+
+        // 設定保存
+        async function saveBrevoSettings() {
+            const settings = {
+                apiKey: document.getElementById('brevoApiKey').value,
+                senderName: document.getElementById('senderName').value,
+                senderEmail: document.getElementById('senderEmail').value,
+                defaultListId: document.getElementById('defaultListId').value
+            };
+
+            try {
+                const response = await fetch('/api/admin/brevo-settings', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+
+                const result = await response.json();
+                alert(result.success ? '✅ 設定保存完了' : '❌ 保存失敗: ' + result.error);
+            } catch (error) {
+                alert('❌ 保存失敗: ' + error.message);
+            }
+        }
+
+        // コンタクト同期
+        async function syncBrevoContacts() {
+            try {
+                const response = await fetch('/api/admin/sync-contacts', { method: 'POST' });
+                const result = await response.json();
+                alert(result.success ? '✅ 同期完了' : '❌ 同期失敗: ' + result.error);
+            } catch (error) {
+                alert('❌ 同期失敗: ' + error.message);
+            }
+        }
+
+        // 初期化
+        window.onload = function() {
+            showTab('brevo');
+        };
+    </script>
+</body>
+</html>

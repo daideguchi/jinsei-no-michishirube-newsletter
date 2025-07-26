@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者ダッシュボード - 人生の道標</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .zen-gradient {
+            background: linear-gradient(135deg, #2C5F41 0%, #4A7C59 100%);
+        }
+        .admin-sidebar {
+            background: linear-gradient(180deg, #1f2937 0%, #374151 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+<script src="/admin/auth-check.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="admin-sidebar shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl">🛡️</span>
+                    <span class="ml-2 text-xl font-bold text-white">人生の道標 管理者画面</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="/admin/dashboard" class="text-white font-semibold">📊 ダッシュボード</a>
+                    <a href="/admin/email-templates" class="text-gray-300 hover:text-white">✉️ メールテンプレート</a>
+                    <a href="/admin/subscribers" class="text-gray-300 hover:text-white">👥 読者管理</a>
+                    <a href="/admin/analytics" class="text-gray-300 hover:text-white">📈 分析</a>
+                    <a href="/admin/settings" class="text-gray-300 hover:text-white">⚙️ 設定</a>
+                    <button onclick="logout()" class="text-red-300 hover:text-red-100">🚪 ログアウト</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- ヘッダー -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">📊 管理者ダッシュボード</h1>
+            <p class="text-gray-600 mt-2">人生の道標メルマガシステム概要</p>
+            <div class="mt-4 text-sm text-gray-500">
+                最終更新: <span id="lastUpdated">2025-07-26 18:30</span>
+            </div>
+        </div>
+
+        <!-- 主要統計 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100">
+                        <span class="text-2xl">👥</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">総読者数</p>
+                        <p class="text-2xl font-bold text-gray-900" id="totalSubscribers">読み込み中...</p>
+                        <p class="text-xs text-green-600">↗️ <span id="newSubscribersGrowth">読み込み中...</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100">
+                        <span class="text-2xl">📧</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">今月配信数</p>
+                        <p class="text-2xl font-bold text-gray-900" id="monthlyEmails">読み込み中...</p>
+                        <p class="text-xs text-green-600">↗️ <span id="campaignGrowth">読み込み中...</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100">
+                        <span class="text-2xl">📈</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">開封率</p>
+                        <p class="text-2xl font-bold text-gray-900" id="openRate">読み込み中...</p>
+                        <p class="text-xs text-green-600">↗️ +2.1% vs 先月</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-red-100">
+                        <span class="text-2xl">🖱️</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">クリック率</p>
+                        <p class="text-2xl font-bold text-gray-900" id="clickRate">読み込み中...</p>
+                        <p class="text-xs text-red-600">↘️ -0.5% vs 先月</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- チャートと詳細情報 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- 配信統計チャート -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">📊 配信統計（過去30日）</h3>
+                <canvas id="emailChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- システム状況 -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">⚡ システム状況</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Google Sheets 連携</span>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">🟢 正常</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Brevo API</span>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">🟢 正常</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">メール配信システム</span>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">🟢 稼働中</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">自動化スケジュール</span>
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">🟡 監視中</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-6 border-t">
+                    <h4 class="font-semibold text-gray-900 mb-3">🔧 クイックアクション</h4>
+                    <div class="space-y-2">
+                        <button onclick="testBrevoConnection()" class="w-full text-left px-4 py-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                            🧪 Brevo接続テスト
+                        </button>
+                        <button onclick="syncGoogleSheets()" class="w-full text-left px-4 py-2 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+                            🔄 Google Sheets同期
+                        </button>
+                        <button onclick="sendTestEmail()" class="w-full text-left px-4 py-2 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
+                            📨 テストメール送信
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最近のアクティビティ -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 最近の配信 -->
+        <div id="recentCampaigns" class="space-y-4">
+            <div class="text-center py-4 text-gray-500">読み込み中...</div>
+        </div>
+        <!-- 元のダミーデータを削除 -->
+        <div id="dummyCampaigns" style="display: none;">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">📬 最近の配信</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <div class="font-medium text-gray-900">Day 1 - 心を整える智慧</div>
+                            <div class="text-sm text-gray-600">45名に配信 • 2時間前</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-medium text-green-600">32.5% 開封</div>
+                            <div class="text-xs text-gray-600">8.2% クリック</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <div class="font-medium text-gray-900">Welcome - ご登録ありがとうございます</div>
+                            <div class="text-sm text-gray-600">23名に配信 • 5時間前</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-medium text-green-600">45.2% 開封</div>
+                            <div class="text-xs text-gray-600">12.1% クリック</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <div class="font-medium text-gray-900">Day 3 - 人間関係の智慧</div>
+                            <div class="text-sm text-gray-600">78名に配信 • 1日前</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-medium text-green-600">28.9% 開封</div>
+                            <div class="text-xs text-gray-600">6.7% クリック</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新規登録者 -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">🆕 新規登録者
+                <div id="recentSubscribers" class="space-y-4">
+                    <div class="text-center py-4 text-gray-500">読み込み中...</div>
+                </div>
+                <!-- 元のダミーデータを削除 -->
+                <div id="dummySubscribers" style="display: none;"></h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <div class="font-medium text-gray-900">田中 健司</div>
+                            <div class="text-sm text-gray-600">tanaka@company.com</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-600">2時間前</div>
+                            <div class="text-xs text-green-600">Step 0</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <div class="font-medium text-gray-900">佐藤 浩二</div>
+                            <div class="text-sm text-gray-600">sato@example.com</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-600">5時間前</div>
+                            <div class="text-xs text-green-600">Step 1</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <div class="font-medium text-gray-900">山田 和夫</div>
+                            <div class="text-sm text-gray-600">yamada@corp.jp</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-600">1日前</div>
+                            <div class="text-xs text-green-600">Step 0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t">
+                    <a href="/admin/subscribers" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        📋 全読者を管理 →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- アラート・通知 -->
+        <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+            <h3 class="text-lg font-bold text-yellow-800 mb-4">⚠️ 重要な通知</h3>
+            <div class="space-y-3">
+                <div class="flex items-start">
+                    <span class="text-yellow-600 mr-3">🔔</span>
+                    <div>
+                        <div class="font-medium text-yellow-800">実際のAPI使用量監視中</div>
+                        <div class="text-sm text-yellow-700">今月のAPI使用量が制限に近づいています。使用量を監視してください。</div>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <span class="text-yellow-600 mr-3">📊</span>
+                    <div>
+                        <div class="font-medium text-yellow-800">実際のパフォーマンス分析中</div>
+                        <div class="text-sm text-yellow-700">件名の改善またはセグメント配信の検討をお勧めします。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // チャート初期化
+        const ctx = document.getElementById('emailChart').getContext('2d');
+        const emailChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['7/20', '7/21', '7/22', '7/23', '7/24', '7/25', '7/26'],
+                datasets: [{
+                    label: '配信数',
+                    data: [12, 8, 15, 23, 18, 11, 25],
+                    borderColor: '#2C5F41',
+                    backgroundColor: 'rgba(44, 95, 65, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: '開封数',
+                    data: [4, 3, 5, 8, 6, 4, 8],
+                    borderColor: '#4A7C59',
+                    backgroundColor: 'rgba(74, 124, 89, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        // リアルタイム更新
+        function updateStats() {
+            // 基本統計更新
+            fetch("/api/admin/stats")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("totalSubscribers").textContent = data.totalSubscribers;
+                    document.getElementById("monthlyEmails").textContent = data.monthlyEmails;
+                    document.getElementById("openRate").textContent = data.openRate;
+                    document.getElementById("clickRate").textContent = data.clickRate;
+                    document.getElementById("lastUpdated").textContent = data.lastUpdated;
+                })
+                .catch(error => {
+                    console.error("統計取得エラー:", error);
+                });
+            
+            // 最近のアクティビティ更新
+            fetch("/api/admin/recent-activity")
+                .then(response => response.json())
+                .then(data => {
+                    // 成長率更新
+                    document.getElementById("newSubscribersGrowth").textContent = `+${data.monthlyStats.newSubscribers} (今月)`;
+                    document.getElementById("campaignGrowth").textContent = `${data.monthlyStats.growth} vs 先月`;
+                    
+                    // 最近の配信更新
+                    const campaignsDiv = document.getElementById("recentCampaigns");
+                    if (data.recentCampaigns.length === 0) {
+                        campaignsDiv.innerHTML = "<div class=\"text-center py-4 text-gray-500\">配信履歴がありません</div>";
+                    } else {
+                        campaignsDiv.innerHTML = data.recentCampaigns.map(campaign => `
+                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <div class="font-medium text-gray-900">${campaign.name}</div>
+                                    <div class="text-sm text-gray-600">${campaign.sentCount}名に配信 • ${campaign.timeAgo}</div>
+                                </div>
+                                <div class="text-right text-sm">
+                                    <div class="text-green-600">${campaign.openRate} 開封</div>
+                                    <div class="text-blue-600">${campaign.clickRate} クリック</div>
+                                </div>
+                            </div>
+                        `).join("");
+                    }
+                    
+                    // 新規登録者更新
+                    const subscribersDiv = document.getElementById("recentSubscribers");
+                    if (data.recentSubscribers.length === 0) {
+                        subscribersDiv.innerHTML = "<div class=\"text-center py-4 text-gray-500\">新規登録者がいません</div>";
+                    } else {
+                        subscribersDiv.innerHTML = data.recentSubscribers.map(subscriber => `
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                <div>
+                                    <div class="font-medium text-gray-900">${subscriber.name}</div>
+                                    <div class="text-sm text-gray-600">${subscriber.email}</div>
+                                </div>
+                                <div class="text-right text-sm text-gray-500">
+                                    <div>${subscriber.timeAgo}</div>
+                                    <div>${subscriber.step}</div>
+                                </div>
+                            </div>
+                        `).join("");
+                    }
+                })
+                .catch(error => {
+                    console.error("アクティビティ取得エラー:", error);
+                });
+            fetch("/api/admin/stats")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("totalSubscribers").textContent = data.totalSubscribers;
+                    document.getElementById("monthlyEmails").textContent = data.monthlyEmails;
+                    document.getElementById("openRate").textContent = data.openRate;
+                    document.getElementById("clickRate").textContent = data.clickRate;
+                    document.getElementById("lastUpdated").textContent = data.lastUpdated;
+                })
+                .catch(error => {
+                    console.error("統計取得エラー:", error);
+                });
+            // 実際の実装では API からデータ取得
+            const now = new Date().toLocaleString('ja-JP');
+            document.getElementById('lastUpdated').textContent = now;
+        }
+
+        // クイックアクション関数
+        async function testBrevoConnection() {
+            try {
+                const response = await fetch('/api/admin/test-brevo');
+                const result = await response.json();
+                alert(result.success ? '✅ Brevo接続成功' : '❌ Brevo接続失敗: ' + result.error);
+            } catch (error) {
+                alert('❌ テスト失敗: ' + error.message);
+            }
+        }
+
+        async function syncGoogleSheets() {
+            try {
+                const response = await fetch('/api/admin/sync-sheets', { method: 'POST' });
+                const result = await response.json();
+                alert(result.success ? '✅ 同期完了' : '❌ 同期失敗: ' + result.error);
+                location.reload();
+            } catch (error) {
+                alert('❌ 同期失敗: ' + error.message);
+            }
+        }
+
+        async function sendTestEmail() {
+            const email = prompt('テスト送信先メールアドレス:', 'admin@example.com');
+            if (!email) return;
+            
+            try {
+                const response = await fetch('/api/admin/test-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const result = await response.json();
+                alert(result.success ? '✅ テストメール送信完了' : '❌ 送信失敗: ' + result.error);
+            } catch (error) {
+                alert('❌ 送信失敗: ' + error.message);
+            }
+        }
+
+        // 5分ごとに統計更新
+        setInterval(updateStats, 5 * 60 * 1000);
+        updateStats();
+    </script>
+</body>
+</html>

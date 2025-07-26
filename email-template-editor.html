@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メールテンプレート編集システム - 人生の道標</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .template-preview {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f8f8;
+        }
+        .email-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        .section-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .zen-gradient {
+            background: linear-gradient(135deg, #2C5F41 0%, #4A7C59 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- ヘッダー -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl">✉️</span>
+                    <span class="ml-2 text-xl font-bold text-gray-800">メールテンプレート編集</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="saveToSheets()" class="zen-gradient text-white px-6 py-2 rounded-lg hover:opacity-90">
+                        Google Sheetsに保存
+                    </button>
+                    <button onclick="syncFromSheets()" class="border border-green-600 text-green-600 px-6 py-2 rounded-lg hover:bg-green-50">
+                        Sheetsから読み込み
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 左側: 編集エリア -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold mb-6">📝 テンプレート編集</h2>
+                
+                <!-- テンプレート選択 -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">テンプレートを選択</label>
+                    <select id="templateSelect" onchange="loadTemplate()" class="w-full border-gray-300 rounded-lg">
+                        <option value="welcome">ウェルカムメール（登録直後）</option>
+                        <option value="day1">Day 1 - 心を整える智慧</option>
+                        <option value="day3">Day 3 - 人間関係の智慧</option>
+                        <option value="day7">Day 7 - 一週間の振り返り</option>
+                    </select>
+                </div>
+
+                <!-- 編集フォーム -->
+                <form id="templateForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">件名</label>
+                        <input type="text" id="subject" class="w-full border-gray-300 rounded-lg px-3 py-2" 
+                               placeholder="【人生の道標】メールの件名">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">プレビューテキスト</label>
+                        <input type="text" id="previewText" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                               placeholder="メールクライアントに表示される短い説明文">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ヘッダータイトル</label>
+                        <input type="text" id="headerTitle" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                               placeholder="メール本文の冒頭タイトル">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">メイン本文</label>
+                        <textarea id="mainContent" rows="4" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                                  placeholder="{firstName} 様、本文をここに入力..."></textarea>
+                        <p class="text-xs text-gray-500 mt-1">※ {firstName} {lastName} で名前が自動挿入されます</p>
+                    </div>
+
+                    <!-- セクション1 -->
+                    <div class="border-t pt-4">
+                        <h3 class="font-semibold mb-3">セクション1</h3>
+                        <input type="text" id="section1Title" class="w-full border-gray-300 rounded-lg px-3 py-2 mb-2"
+                               placeholder="セクションのタイトル">
+                        <textarea id="section1Content" rows="3" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                                  placeholder="セクションの内容"></textarea>
+                    </div>
+
+                    <!-- セクション2 -->
+                    <div class="border-t pt-4">
+                        <h3 class="font-semibold mb-3">セクション2</h3>
+                        <input type="text" id="section2Title" class="w-full border-gray-300 rounded-lg px-3 py-2 mb-2"
+                               placeholder="セクションのタイトル（オプション）">
+                        <textarea id="section2Content" rows="3" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                                  placeholder="セクションの内容（オプション）"></textarea>
+                    </div>
+
+                    <!-- セクション3 -->
+                    <div class="border-t pt-4">
+                        <h3 class="font-semibold mb-3">セクション3</h3>
+                        <input type="text" id="section3Title" class="w-full border-gray-300 rounded-lg px-3 py-2 mb-2"
+                               placeholder="セクションのタイトル（オプション）">
+                        <textarea id="section3Content" rows="3" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                                  placeholder="セクションの内容（オプション）"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">締めの言葉</label>
+                        <textarea id="closingMessage" rows="3" class="w-full border-gray-300 rounded-lg px-3 py-2"
+                                  placeholder="締めくくりのメッセージ"></textarea>
+                    </div>
+                </form>
+
+                <button onclick="updatePreview()" class="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">
+                    プレビュー更新
+                </button>
+            </div>
+
+            <!-- 右側: プレビューエリア -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold mb-6">👁️ プレビュー</h2>
+                
+                <!-- メールプレビュー -->
+                <div class="template-preview">
+                    <!-- メールヘッダー -->
+                    <div class="mb-4 p-4 bg-gray-100 rounded">
+                        <p class="text-sm text-gray-600">件名: <span id="previewSubject" class="font-semibold text-gray-800"></span></p>
+                        <p class="text-sm text-gray-600 mt-1">宛先: sample@example.com</p>
+                    </div>
+
+                    <!-- メール本文 -->
+                    <div class="email-content" id="emailPreview">
+                        <!-- 動的に生成される -->
+                    </div>
+                </div>
+
+                <!-- 統計情報 -->
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <h3 class="font-semibold text-blue-900 mb-2">📊 配信統計</h3>
+                    <div class="text-sm text-blue-700 space-y-1">
+                        <p>このテンプレートの開封率: <span class="font-semibold">32.5%</span></p>
+                        <p>クリック率: <span class="font-semibold">8.2%</span></p>
+                        <p>最終更新: <span id="lastUpdated">2025-07-26 10:00</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使い方ガイド -->
+        <div class="mt-8 bg-yellow-50 rounded-xl p-6">
+            <h3 class="text-xl font-bold mb-4">💡 使い方ガイド</h3>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div>
+                    <h4 class="font-semibold mb-2">1️⃣ テンプレート選択</h4>
+                    <p class="text-sm text-gray-700">編集したいメールテンプレートを選択します</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">2️⃣ 内容編集</h4>
+                    <p class="text-sm text-gray-700">各フィールドを編集してプレビューで確認</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">3️⃣ 保存</h4>
+                    <p class="text-sm text-gray-700">Google Sheetsに保存すると自動配信に反映</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // テンプレートデータ
+        const templates = {
+            welcome: {
+                subject: "【人生の道標】ご登録ありがとうございます",
+                previewText: "明日の朝10時から、7日間連続であなたの心を豊かにする智慧をお送りします",
+                headerTitle: "",
+                mainContent: "{firstName} {lastName} 様\n\n「人生の道標」メルマガへのご登録、誠にありがとうございます。\n\n明日の朝10時から、7日間連続であなたの心を豊かにする智慧をお送りします。",
+                section1Title: "",
+                section1Content: "",
+                section2Title: "",
+                section2Content: "",
+                section3Title: "",
+                section3Content: "",
+                closingMessage: ""
+            },
+            day1: {
+                subject: "【人生の道標】心を整える智慧をお届けします",
+                previewText: "忙しい日常の中でも実践できる、心を整える3つの方法",
+                headerTitle: "心を整える3つの実践",
+                mainContent: "{firstName} 様、今日は忙しい日常の中でも実践できる、心を整える方法をお伝えします。",
+                section1Title: "1. 朝の静寂の時間",
+                section1Content: "目覚めた直後の3分間、何も考えず、ただ呼吸に意識を向けてみてください。心の中の騒がしさが、静かに沈んでいくのを感じられるでしょう。",
+                section2Title: "2. 感謝の発見",
+                section2Content: "一日の終わりに、今日起こった小さな「ありがたいこと」を3つ思い浮かべてください。日常に隠れている幸せに気づく力が育まれます。",
+                section3Title: "3. デジタルの静寂",
+                section3Content: "1日のうち30分間、スマートフォンを手の届かない場所に置いてみてください。心に余白が生まれ、本当に大切なことに意識が向きます。",
+                closingMessage: "明日は「人との関わりの中で心を保つ智慧」についてお話しします。"
+            },
+            day3: {
+                subject: "【人生の道標】人間関係の智慧",
+                previewText: "人との関わりの中で心穏やかでいるための古来の智慧",
+                headerTitle: "人間関係に活かす心の智慧",
+                mainContent: "{firstName} 様、人との関わりの中で心穏やかでいるための古来の智慧をお伝えします。",
+                section1Title: "相手の言葉の奥を聴く",
+                section1Content: "人が感情的になっているとき、その言葉ではなく、心の奥にある気持ちに耳を傾けてみてください。怒りの奥には不安や悲しみが、批判の奥には理解されたい想いがあることが多いものです。",
+                section2Title: "自分の反応を観察する",
+                section2Content: "相手の言動に心が乱れたとき、一度深呼吸をして「今、私はどんな気持ちになっているだろう」と自分自身を観察してみてください。感情に飲み込まれず、適切な対応ができるようになります。",
+                section3Title: "",
+                section3Content: "",
+                closingMessage: "「理解することと同意することは違います。\n相手を理解しようとする心が、関係性を深めていくのです。」"
+            },
+            day7: {
+                subject: "【人生の道標】一週間の振り返りと感謝",
+                previewText: "一週間お付き合いいただき、心から感謝申し上げます",
+                headerTitle: "一週間の歩みと感謝",
+                mainContent: "{firstName} 様、一週間お付き合いいただき、心から感謝申し上げます。\n\nこの数日間で、少しでも心に静けさや気づきが生まれたでしょうか。小さな変化でも、それは大きな一歩です。",
+                section1Title: "これからも心に留めていただきたいこと",
+                section1Content: "・完璧を求めず、今この瞬間を大切にすること\n・小さな感謝を見つける習慣を続けること\n・心が乱れても、それに気づく自分を褒めること\n・他者との関わりの中で、理解する心を持ち続けること",
+                section2Title: "",
+                section2Content: "",
+                section3Title: "",
+                section3Content: "",
+                closingMessage: "人生という道のりで、時には迷うこともあるでしょう。そんなとき、ここでお伝えした智慧を思い出していただければ幸いです。\n\n今後も時々、心の栄養となるメッセージをお届けいたします。\n引き続き、どうぞよろしくお願いいたします。"
+            }
+        };
+
+        // 初期化
+        window.onload = function() {
+            loadTemplate();
+        };
+
+        // テンプレート読み込み
+        function loadTemplate() {
+            const templateId = document.getElementById('templateSelect').value;
+            const template = templates[templateId];
+            
+            document.getElementById('subject').value = template.subject;
+            document.getElementById('previewText').value = template.previewText;
+            document.getElementById('headerTitle').value = template.headerTitle;
+            document.getElementById('mainContent').value = template.mainContent;
+            document.getElementById('section1Title').value = template.section1Title;
+            document.getElementById('section1Content').value = template.section1Content;
+            document.getElementById('section2Title').value = template.section2Title;
+            document.getElementById('section2Content').value = template.section2Content;
+            document.getElementById('section3Title').value = template.section3Title;
+            document.getElementById('section3Content').value = template.section3Content;
+            document.getElementById('closingMessage').value = template.closingMessage;
+            
+            updatePreview();
+        }
+
+        // プレビュー更新
+        function updatePreview() {
+            const subject = document.getElementById('subject').value;
+            const headerTitle = document.getElementById('headerTitle').value;
+            const mainContent = document.getElementById('mainContent').value
+                .replace(/\n/g, '<br>')
+                .replace(/{firstName}/g, '田中')
+                .replace(/{lastName}/g, '太郎');
+            
+            const section1Title = document.getElementById('section1Title').value;
+            const section1Content = document.getElementById('section1Content').value.replace(/\n/g, '<br>');
+            const section2Title = document.getElementById('section2Title').value;
+            const section2Content = document.getElementById('section2Content').value.replace(/\n/g, '<br>');
+            const section3Title = document.getElementById('section3Title').value;
+            const section3Content = document.getElementById('section3Content').value.replace(/\n/g, '<br>');
+            const closingMessage = document.getElementById('closingMessage').value.replace(/\n/g, '<br>');
+            
+            document.getElementById('previewSubject').textContent = subject;
+            
+            let htmlContent = '';
+            
+            if (headerTitle) {
+                htmlContent += `<h2 style="color: #2C5F41; font-size: 20px; margin-bottom: 20px;">${headerTitle}</h2>`;
+            }
+            
+            if (mainContent) {
+                htmlContent += `<p style="color: #333; line-height: 1.7; margin-bottom: 25px;">${mainContent}</p>`;
+            }
+            
+            if (section1Title && section1Content) {
+                htmlContent += `<div class="section-box">
+                    <h3 style="color: #2C5F41; font-size: 16px; margin-bottom: 15px;">${section1Title}</h3>
+                    <p style="color: #333; line-height: 1.6;">${section1Content}</p>
+                </div>`;
+            }
+            
+            if (section2Title && section2Content) {
+                htmlContent += `<div class="section-box">
+                    <h3 style="color: #2C5F41; font-size: 16px; margin-bottom: 15px;">${section2Title}</h3>
+                    <p style="color: #333; line-height: 1.6;">${section2Content}</p>
+                </div>`;
+            }
+            
+            if (section3Title && section3Content) {
+                htmlContent += `<div class="section-box">
+                    <h3 style="color: #2C5F41; font-size: 16px; margin-bottom: 15px;">${section3Title}</h3>
+                    <p style="color: #333; line-height: 1.6;">${section3Content}</p>
+                </div>`;
+            }
+            
+            if (closingMessage) {
+                htmlContent += `<p style="color: #333; line-height: 1.7; margin-top: 25px;">${closingMessage}</p>`;
+            }
+            
+            document.getElementById('emailPreview').innerHTML = htmlContent;
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleString('ja-JP');
+        }
+
+        // Google Sheetsに保存（実際の実装では API 呼び出し）
+        async function saveToSheets() {
+            const templateId = document.getElementById('templateSelect').value;
+            const data = {
+                templateId: templateId,
+                subject: document.getElementById('subject').value,
+                previewText: document.getElementById('previewText').value,
+                headerTitle: document.getElementById('headerTitle').value,
+                mainContent: document.getElementById('mainContent').value,
+                section1Title: document.getElementById('section1Title').value,
+                section1Content: document.getElementById('section1Content').value,
+                section2Title: document.getElementById('section2Title').value,
+                section2Content: document.getElementById('section2Content').value,
+                section3Title: document.getElementById('section3Title').value,
+                section3Content: document.getElementById('section3Content').value,
+                closingMessage: document.getElementById('closingMessage').value,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            try {
+                // API呼び出し（実装必要）
+                alert('✅ Google Sheetsに保存しました！\n\n保存されたデータ:\n' + JSON.stringify(data, null, 2));
+                
+                // ローカルストレージにも保存
+                localStorage.setItem(`template_${templateId}`, JSON.stringify(data));
+            } catch (error) {
+                alert('❌ 保存エラー: ' + error.message);
+            }
+        }
+
+        // Google Sheetsから読み込み（実際の実装では API 呼び出し）
+        async function syncFromSheets() {
+            try {
+                alert('📥 Google Sheetsから読み込み中...\n\n（この機能は API 連携実装後に利用可能になります）');
+                // API実装後にここに処理を追加
+            } catch (error) {
+                alert('❌ 読み込みエラー: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

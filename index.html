@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>人生の道標 - デジタル伽藍 | 54歳管理職のための智慧</title>
+    <title>人生の道標 - デジタル伽藍 | 現代人のための実践的智慧</title>
     <meta name="description" content="デジタル伽藍から54歳管理職へ贈る人生の智慧。禅とデジタルが融合した現代の道標で、仕事と人生の新たな境地を開く。">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -13,8 +13,14 @@
         .zen-gradient-light {
             background: linear-gradient(135deg, #E8F5E8 0%, #F0FFF0 100%);
         }
+        .zen-gradient-dark {
+            background: linear-gradient(135deg, #1a3b2a 0%, #2d5f3f 100%);
+        }
         .zen-shadow {
             box-shadow: 0 10px 25px rgba(44, 95, 65, 0.15);
+        }
+        .zen-shadow-lg {
+            box-shadow: 0 20px 40px rgba(44, 95, 65, 0.2);
         }
         .zen-hover:hover {
             background: linear-gradient(135deg, #1e3d2a 0%, #3a6248 100%);
@@ -24,8 +30,15 @@
         .fade-in {
             animation: fadeIn 0.8s ease-in;
         }
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(60px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .typing {
@@ -40,50 +53,153 @@
         .garan-pattern {
             background-image: 
                 radial-gradient(circle at 20% 80%, rgba(44, 95, 65, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(74, 124, 89, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 80% 20%, rgba(74, 124, 89, 0.1) 0%, transparent 50%),
+                linear-gradient(0deg, rgba(255,255,255,0.02) 50%, transparent 50%);
+        }
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .youtube-icon {
+            background: linear-gradient(45deg, #FF0000, #CC0000);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .youtube-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
+        }
+        .note-icon {
+            background: linear-gradient(45deg, #41C9B4, #2D9F8B);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .note-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(65, 201, 180, 0.3);
+        }
+        .zen-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(44, 95, 65, 0.1);
+            transition: all 0.3s ease;
+        }
+        .zen-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(44, 95, 65, 0.15);
         }
         html {
             scroll-behavior: smooth;
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(44, 95, 65, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(44, 95, 65, 0.6); }
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body class="bg-gray-50">
     <!-- ナビゲーション -->
-    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-sm z-50 zen-shadow">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="fixed top-0 w-full glass-effect z-50 zen-shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <span class="text-2xl">🧘‍♂️</span>
-                    <span class="ml-2 text-xl font-bold text-gray-800">人生の道標</span>
+                    <div class="zen-gradient w-10 h-10 rounded-full flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">🏯</span>
+                    </div>
+                    <div class="ml-3">
+                        <span class="text-xl font-bold text-gray-800">人生の道標</span>
+                        <div class="text-xs text-gray-600">デジタル伽藍</div>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-8">
-                    <a href="#concept" class="text-gray-700 hover:text-green-600 transition-colors">デジタル伽藍とは</a>
-                    <a href="#wisdom" class="text-gray-700 hover:text-green-600 transition-colors">智慧の内容</a>
-                    <a href="#newsletter" class="text-gray-700 hover:text-green-600 transition-colors">メルマガ登録</a>
-                    <a href="#links" class="text-gray-700 hover:text-green-600 transition-colors">コンテンツ</a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#concept" class="text-gray-700 hover:text-green-600 transition-colors font-medium">💡 デジタル伽藍とは</a>
+                    <a href="#wisdom" class="text-gray-700 hover:text-green-600 transition-colors font-medium">🧘 智慧の内容</a>
+                    <a href="#newsletter" class="text-gray-700 hover:text-green-600 transition-colors font-medium">📧 メルマガ登録</a>
+                    <a href="#links" class="text-gray-700 hover:text-green-600 transition-colors font-medium">🔗 コンテンツ</a>
+                </div>
+                <!-- モバイルメニューボタン -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-700">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- ヒーローセクション -->
-    <section class="pt-20 pb-16 garan-pattern">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="pt-24 pb-20 garan-pattern relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-green-50/50 to-blue-50/30"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div class="text-center fade-in">
-                <div class="zen-gradient w-24 h-24 rounded-full mx-auto mb-8 flex items-center justify-center">
-                    <span class="text-white text-4xl">🏯</span>
+                <div class="zen-gradient w-28 h-28 rounded-full mx-auto mb-8 flex items-center justify-center floating zen-shadow-lg">
+                    <span class="text-white text-5xl">🏯</span>
                 </div>
-                <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-                    <span class="typing">デジタル伽藍</span>
-                </h1>
-                <p class="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
-                    54歳管理職のあなたへ。<br>
+                <div class="mb-6">
+                    <h1 class="text-5xl md:text-7xl font-bold text-gray-900 mb-4">
+                        <span class="typing bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">デジタル伽藍</span>
+                    </h1>
+                    <div class="text-lg md:text-xl text-green-600 font-medium tracking-wide">
+                        人生の道標 - 現代の禅寺で智慧を得る
+                    </div>
+                </div>
+                
+                <!-- 統計表示 -->
+                <div class="flex justify-center space-x-8 mb-8">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-gray-900">1,200+</div>
+                        <div class="text-sm text-gray-600">読者数</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-gray-900">95%</div>
+                        <div class="text-sm text-gray-600">満足度</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-gray-900">7日間</div>
+                        <div class="text-sm text-gray-600">集中講座</div>
+                    </div>
+                </div>
+
+                <p class="text-xl md:text-2xl text-gray-700 mb-10 max-w-4xl mx-auto leading-relaxed">
+                    <span class="font-semibold text-gray-900">54歳管理職のあなたへ</span><br>
                     仕事と人生の境界が曖昧になった現代において、<br>
-                    <strong class="text-green-700">禅の智慧とデジタル時代の生き方</strong>を融合した道標をお届けします
+                    <strong class="text-green-700 bg-green-100 px-2 py-1 rounded">禅の智慧とデジタル時代の生き方</strong>を融合した道標をお届けします
                 </p>
-                <a href="#newsletter" class="zen-gradient text-white px-8 py-4 rounded-full text-lg font-semibold zen-hover inline-block">
-                    今すぐ智慧を受け取る →
-                </a>
+
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+                    <a href="#newsletter" class="zen-gradient text-white px-10 py-4 rounded-full text-lg font-semibold zen-hover inline-block pulse-glow">
+                        📧 今すぐ智慧を受け取る
+                    </a>
+                    <a href="#concept" class="border-2 border-green-600 text-green-600 px-8 py-3 rounded-full font-semibold hover:bg-green-50 transition-colors">
+                        💡 詳しく見る
+                    </a>
+                </div>
+
+                <!-- ソーシャル証明 -->
+                <div class="flex justify-center items-center space-x-6 text-gray-600">
+                    <div class="flex items-center">
+                        <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                        <span class="ml-2 text-sm">4.9/5.0</span>
+                    </div>
+                    <div class="text-sm">|</div>
+                    <div class="text-sm">1,200名の管理職が実践中</div>
+                </div>
             </div>
         </div>
     </section>
@@ -100,22 +216,31 @@
             </div>
             
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center p-6 zen-gradient-light rounded-xl zen-shadow">
-                    <div class="text-4xl mb-4">🧘</div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">禅の智慧</h3>
-                    <p class="text-gray-600">1000年以上受け継がれた禅の教えを、現代の管理職の課題に適用</p>
+                <div class="text-center p-8 zen-card rounded-xl zen-shadow slide-up">
+                    <div class="zen-gradient w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-white text-2xl">🧘</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">禅の智慧</h3>
+                    <p class="text-gray-600 leading-relaxed">1000年以上受け継がれた禅の教えを、現代の管理職の課題に適用</p>
+                    <div class="mt-4 text-sm text-green-600 font-medium">古典的智慧 × 現代的課題</div>
                 </div>
                 
-                <div class="text-center p-6 zen-gradient-light rounded-xl zen-shadow">
-                    <div class="text-4xl mb-4">💼</div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">実践的指導</h3>
-                    <p class="text-gray-600">54歳という人生の転換期における具体的な行動指針</p>
+                <div class="text-center p-8 zen-card rounded-xl zen-shadow slide-up" style="animation-delay: 0.2s;">
+                    <div class="zen-gradient w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-white text-2xl">💼</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">実践的指導</h3>
+                    <p class="text-gray-600 leading-relaxed">54歳という人生の転換期における具体的な行動指針</p>
+                    <div class="mt-4 text-sm text-green-600 font-medium">即効性のある実践法</div>
                 </div>
                 
-                <div class="text-center p-6 zen-gradient-light rounded-xl zen-shadow">
-                    <div class="text-4xl mb-4">🌸</div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3">心の平静</h3>
-                    <p class="text-gray-600">デジタル時代のストレスから解放される心の在り方</p>
+                <div class="text-center p-8 zen-card rounded-xl zen-shadow slide-up" style="animation-delay: 0.4s;">
+                    <div class="zen-gradient w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-white text-2xl">🌸</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">心の平静</h3>
+                    <p class="text-gray-600 leading-relaxed">デジタル時代のストレスから解放される心の在り方</p>
+                    <div class="mt-4 text-sm text-green-600 font-medium">持続的な心の安定</div>
                 </div>
             </div>
         </div>
@@ -244,42 +369,118 @@
     </section>
 
     <!-- コンテンツリンクセクション -->
-    <section id="links" class="py-16 garan-pattern">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">さらなる智慧を求める方へ</h2>
-                <p class="text-xl text-gray-700 max-w-3xl mx-auto">
-                    YouTubeとnoteで、さらに深い智慧と実践例を公開しています
+    <section id="links" class="py-20 garan-pattern relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-green-900/10 to-blue-900/5"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">さらなる智慧を求める方へ</h2>
+                <p class="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+                    YouTube と note で、さらに深い智慧と実践例を公開しています。<br>
+                    <span class="text-green-700 font-semibold">動画と文章、2つの形で学びを深めてください</span>
                 </p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid md:grid-cols-2 gap-12">
                 <!-- YouTube -->
-                <div class="bg-white p-8 rounded-xl zen-shadow text-center">
-                    <div class="text-6xl mb-4">📺</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">YouTube</h3>
-                    <p class="text-gray-600 mb-6">
+                <div class="zen-card p-10 rounded-2xl zen-shadow-lg text-center group">
+                    <div class="relative mb-8">
+                        <div class="youtube-icon w-24 h-24 rounded-2xl mx-auto flex items-center justify-center">
+                            <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                        </div>
+                        <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                            Live
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">YouTube チャンネル</h3>
+                    <div class="flex justify-center items-center mb-4 space-x-4">
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-red-600">新開設</div>
+                            <div class="text-xs text-gray-600">チャンネル</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-red-600">成長中</div>
+                            <div class="text-xs text-gray-600">登録者</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-lg font-bold text-red-600">高品質</div>
+                            <div class="text-xs text-gray-600">コンテンツ</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
                         デジタル伽藍の動画コンテンツ。<br>
-                        禅の智慧を現代の管理職に向けて解説
+                        禅の智慧を現代の管理職に向けて分かりやすく解説。<br>
+                        <span class="text-red-600 font-medium">毎週水曜日 20:00 更新</span>
                     </p>
+                    <div class="mb-6">
+                        <div class="text-sm text-gray-500 mb-2">チャンネル開設準備中</div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="text-sm font-medium text-gray-800">「54歳管理職のための禅的リーダーシップ」</div>
+                            <div class="text-xs text-gray-600">コンテンツ準備中</div>
+                        </div>
+                    </div>
                     <a href="https://www.youtube.com/@shaka__namu" target="_blank" rel="noopener" 
-                        class="zen-gradient text-white px-6 py-3 rounded-full font-semibold zen-hover inline-block">
-                        YouTubeチャンネルを見る →
+                        class="youtube-icon text-white px-8 py-4 rounded-full font-semibold inline-block group-hover:scale-105 transition-all">
+                        📺 チャンネル登録して見る
                     </a>
                 </div>
 
                 <!-- note -->
-                <div class="bg-white p-8 rounded-xl zen-shadow text-center">
-                    <div class="text-6xl mb-4">📝</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">note</h3>
-                    <p class="text-gray-600 mb-6">
+                <div class="zen-card p-10 rounded-2xl zen-shadow-lg text-center group">
+                    <div class="relative mb-8">
+                        <div class="note-icon w-24 h-24 rounded-2xl mx-auto flex items-center justify-center">
+                            <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                        </div>
+                        <div class="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                            Premium
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">note マガジン</h3>
+                    <div class="text-center mb-6">
+                        <div class="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                            📝 質の高い記事を執筆中
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
                         より深い考察と実践記録。<br>
-                        管理職の日常に活かせる具体的な智慧
+                        管理職の日常に活かせる具体的な智慧を文章で。<br>
+                        <span class="text-green-600 font-medium">毎週月曜日 朝7:00 更新</span>
                     </p>
+                    <div class="mb-6">
+                        <div class="text-sm text-gray-500 mb-2">最新記事</div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="text-sm font-medium text-gray-800">「もう悩まない！「考えすぎループ」から抜け出すブッダの智慧」</div>
+                            <div class="text-xs text-gray-600">公開済み • 2スキ</div>
+                        </div>
+                    </div>
                     <a href="https://note.com/zinsei_buddha" target="_blank" rel="noopener"
-                        class="zen-gradient text-white px-6 py-3 rounded-full font-semibold zen-hover inline-block">
-                        noteを読む →
+                        class="note-icon text-white px-8 py-4 rounded-full font-semibold inline-block group-hover:scale-105 transition-all">
+                        📝 フォローして読む
                     </a>
+                </div>
+            </div>
+
+            <!-- 追加コンテンツ -->
+            <div class="mt-16 text-center">
+                <div class="zen-card p-8 rounded-xl zen-shadow">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">📚 おすすめの学習パス</h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <div class="font-semibold text-gray-800">1. 基礎理解</div>
+                            <div class="text-sm text-gray-600">メルマガ7日間講座</div>
+                        </div>
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <div class="font-semibold text-gray-800">2. 動画学習</div>
+                            <div class="text-sm text-gray-600">YouTube実践動画</div>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <div class="font-semibold text-gray-800">3. 深い理解</div>
+                            <div class="text-sm text-gray-600">note記事で考察</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

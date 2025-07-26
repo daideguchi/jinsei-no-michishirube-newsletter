@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者画面 - メールテンプレート編集 | 人生の道標</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .template-preview {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f8f8;
+        }
+        .email-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        .section-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .zen-gradient {
+            background: linear-gradient(135deg, #2C5F41 0%, #4A7C59 100%);
+        }
+        .admin-sidebar {
+            background: linear-gradient(180deg, #1f2937 0%, #374151 100%);
+        }
+    </style>
+<script src="/admin/auth-check.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- 管理者ナビゲーション -->
+    <nav class="admin-sidebar shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl">🛡️</span>
+                    <span class="ml-2 text-xl font-bold text-white">人生の道標 管理者画面</span>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="/admin/dashboard" class="text-gray-300 hover:text-white">📊 ダッシュボード</a>
+                    <a href="/admin/email-templates" class="text-white font-semibold">✉️ メールテンプレート</a>
+                    <a href="/admin/subscribers" class="text-gray-300 hover:text-white">👥 読者管理</a>
+                    <a href="/admin/analytics" class="text-gray-300 hover:text-white">📈 分析</a>
+                    <a href="/admin/settings" class="text-gray-300 hover:text-white">⚙️ 設定</a>
+                    <button onclick="logout()" class="text-red-300 hover:text-red-100">🚪 ログアウト</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- パンくずナビ -->
+    <div class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <nav class="text-sm">
+                <span class="text-gray-500">管理者画面</span>
+                <span class="text-gray-400 mx-2">›</span>
+                <span class="text-green-600 font-semibold">メールテンプレート編集</span>
+            </nav>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- ヘッダー統計 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100">
+                        <span class="text-2xl">📧</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">総配信数</p>
+                        <p class="text-2xl font-bold text-gray-900" id="totalSent">1,247</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100">
+                        <span class="text-2xl">📈</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">開封率</p>
+                        <p class="text-2xl font-bold text-green-600" id="openRate">32.5%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100">
+                        <span class="text-2xl">🖱️</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">クリック率</p>
+                        <p class="text-2xl font-bold text-purple-600" id="clickRate">8.2%</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-red-100">
+                        <span class="text-2xl">⚠️</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">配信失敗</p>
+                        <p class="text-2xl font-bold text-red-600" id="failureRate">0.3%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 左側: 編集エリア -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">📝 テンプレート編集</h2>
+                    <div class="flex space-x-2">
+                        <button onclick="saveToSheets()" class="zen-gradient text-white px-4 py-2 rounded-lg hover:opacity-90 text-sm">
+                            💾 保存
+                        </button>
+                        <button onclick="syncFromSheets()" class="border border-green-600 text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 text-sm">
+                            🔄 同期
+                        </button>
+                        <button onclick="sendTestEmail()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                            📨 テスト送信
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- テンプレート選択 -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">📋 テンプレートを選択</label>
+                    <select id="templateSelect" onchange="loadTemplate()" class="w-full border-gray-300 rounded-lg text-sm">
+                        <option value="welcome">🎉 ウェルカムメール（登録直後）</option>
+                        <option value="day1">1️⃣ Day 1 - 心を整える智慧</option>
+                        <option value="day3">3️⃣ Day 3 - 人間関係の智慧</option>
+                        <option value="day7">7️⃣ Day 7 - 一週間の振り返り</option>
+                    </select>
+                </div>
+
+                <!-- クイック編集タブ -->
+                <div class="border-b border-gray-200 mb-6">
+                    <nav class="-mb-px flex space-x-8">
+                        <button onclick="showTab('basic')" id="basicTab" class="border-b-2 border-green-500 py-2 px-1 text-sm font-medium text-green-600">
+                            基本設定
+                        </button>
+                        <button onclick="showTab('content')" id="contentTab" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                            コンテンツ
+                        </button>
+                        <button onclick="showTab('advanced')" id="advancedTab" class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                            高度な設定
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- 基本設定タブ -->
+                <div id="basicContent" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">📧 件名</label>
+                        <input type="text" id="subject" class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm" 
+                               placeholder="【人生の道標】メールの件名">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">👁️ プレビューテキスト</label>
+                        <input type="text" id="previewText" class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm"
+                               placeholder="メールクライアントに表示される短い説明文">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">📋 ヘッダータイトル</label>
+                        <input type="text" id="headerTitle" class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm"
+                               placeholder="メール本文の冒頭タイトル">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">📝 メイン本文</label>
+                        <textarea id="mainContent" rows="4" class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm"
+                                  placeholder="{firstName} 様、本文をここに入力..."></textarea>
+                        <p class="text-xs text-gray-500 mt-1">💡 {firstName} {lastName} で名前が自動挿入されます</p>
+                    </div>
+                </div>
+
+                <!-- コンテンツタブ -->
+                <div id="contentArea" class="space-y-6 hidden">
+                    <!-- セクション1 -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3 text-green-700">📝 セクション1</h3>
+                        <input type="text" id="section1Title" class="w-full border-gray-300 rounded-lg px-3 py-2 mb-2 text-sm"
+                               placeholder="セクションのタイトル">
+                        <textarea id="section1Content" rows="3" class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm"
+                                  placeholder="セクションの内容"></textarea>
+                    </div>
+
+                    <!-- セクション2 -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3 text-green-700">📝 セクション2</h3>
+                        <input type="text" id="section2Title" class="w-full border-gray-300 rounded-lg px-3 py-2 mb-2 text-sm"
+                               placeholder="セクションのタイトル（オプション）">
+                        <textarea id="section2Content" rows="3" class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm"
+                                  placeholder="セクションの内容（オプション）"></textarea>
+                    </div>
+
+                    <!-- セクション3 -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3 text-green-700">📝 セクション3</h3>
+                        <input type="text" id="section3Title" class="w-full border-gray-300 rounded-lg px-3 py-2 mb-2 text-sm"
+                               placeholder="セクションのタイトル（オプション）">
+                        <textarea id="section3Content" rows="3" class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm"
+                                  placeholder="セクションの内容（オプション）"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">🎯 締めの言葉</label>
+                        <textarea id="closingMessage" rows="3" class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm"
+                                  placeholder="締めくくりのメッセージ"></textarea>
+                    </div>
+                </div>
+
+                <!-- 高度な設定タブ -->
+                <div id="advancedContent" class="space-y-4 hidden">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">📅 配信タイミング</label>
+                            <select class="w-full border-gray-300 rounded-lg text-sm">
+                                <option>即座に配信</option>
+                                <option>1日後</option>
+                                <option>3日後</option>
+                                <option>7日後</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">🎯 対象セグメント</label>
+                            <select class="w-full border-gray-300 rounded-lg text-sm">
+                                <option>全読者</option>
+                                <option>新規読者のみ</option>
+                                <option>アクティブ読者のみ</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">🏷️ タグ設定</label>
+                        <input type="text" class="w-full border-gray-300 rounded-lg px-3 py-2 text-sm" 
+                               placeholder="例: mindfulness,leadership">
+                    </div>
+                </div>
+
+                <button onclick="updatePreview()" class="w-full mt-6 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-semibold">
+                    🔄 プレビュー更新
+                </button>
+            </div>
+
+            <!-- 右側: プレビューエリア -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">👁️ プレビュー</h2>
+                    <div class="flex space-x-2">
+                        <button class="bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm">📱 モバイル</button>
+                        <button class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm">💻 デスクトップ</button>
+                    </div>
+                </div>
+                
+                <!-- メールプレビュー -->
+                <div class="template-preview">
+                    <!-- メールヘッダー -->
+                    <div class="mb-4 p-4 bg-gray-100 rounded">
+                        <div class="flex items-center mb-2">
+                            <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white text-sm font-bold">道</div>
+                            <div class="ml-3">
+                                <p class="text-sm font-semibold text-gray-800">人生の道標 - デジタル伽藍</p>
+                                <p class="text-xs text-gray-600">noreply@jinsei-michishirube.com</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600">件名: <span id="previewSubject" class="font-semibold text-gray-800"></span></p>
+                        <p class="text-sm text-gray-600 mt-1">宛先: 実際の読者データから取得</p>
+                    </div>
+
+                    <!-- メール本文 -->
+                    <div class="email-content" id="emailPreview">
+                        <!-- 動的に生成される -->
+                    </div>
+                </div>
+
+                <!-- 統計情報 -->
+                <div class="mt-6 grid grid-cols-2 gap-4">
+                    <div class="p-4 bg-blue-50 rounded-lg">
+                        <h3 class="font-semibold text-blue-900 mb-2">📊 予想成果</h3>
+                        <div class="text-sm text-blue-700 space-y-1">
+                            <p>開封率: <span class="font-semibold">32.5%</span></p>
+                            <p>クリック率: <span class="font-semibold">8.2%</span></p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-green-50 rounded-lg">
+                        <h3 class="font-semibold text-green-900 mb-2">⏰ 配信情報</h3>
+                        <div class="text-sm text-green-700 space-y-1">
+                            <p>最終更新: <span id="lastUpdated">2025-07-26</span></p>
+                            <p>ステータス: <span class="font-semibold">アクティブ</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // テンプレートデータ（省略 - 前回と同じ）
+        const templates = {
+            welcome: {
+                subject: "【人生の道標】ご登録ありがとうございます",
+                previewText: "明日の朝10時から、7日間連続であなたの心を豊かにする智慧をお送りします",
+                headerTitle: "",
+                mainContent: "{firstName} {lastName} 様\n\n「人生の道標」メルマガへのご登録、誠にありがとうございます。\n\n明日の朝10時から、7日間連続であなたの心を豊かにする智慧をお送りします。",
+                section1Title: "",
+                section1Content: "",
+                section2Title: "",
+                section2Content: "",
+                section3Title: "",
+                section3Content: "",
+                closingMessage: ""
+            },
+            day1: {
+                subject: "【人生の道標】心を整える智慧をお届けします",
+                previewText: "忙しい日常の中でも実践できる、心を整える3つの方法",
+                headerTitle: "心を整える3つの実践",
+                mainContent: "{firstName} 様、今日は忙しい日常の中でも実践できる、心を整える方法をお伝えします。",
+                section1Title: "1. 朝の静寂の時間",
+                section1Content: "目覚めた直後の3分間、何も考えず、ただ呼吸に意識を向けてみてください。心の中の騒がしさが、静かに沈んでいくのを感じられるでしょう。",
+                section2Title: "2. 感謝の発見",
+                section2Content: "一日の終わりに、今日起こった小さな「ありがたいこと」を3つ思い浮かべてください。日常に隠れている幸せに気づく力が育まれます。",
+                section3Title: "3. デジタルの静寂",
+                section3Content: "1日のうち30分間、スマートフォンを手の届かない場所に置いてみてください。心に余白が生まれ、本当に大切なことに意識が向きます。",
+                closingMessage: "明日は「人との関わりの中で心を保つ智慧」についてお話しします。"
+            },
+            day3: {
+                subject: "【人生の道標】人間関係の智慧",
+                previewText: "人との関わりの中で心穏やかでいるための古来の智慧",
+                headerTitle: "人間関係に活かす心の智慧",
+                mainContent: "{firstName} 様、人との関わりの中で心穏やかでいるための古来の智慧をお伝えします。",
+                section1Title: "相手の言葉の奥を聴く",
+                section1Content: "人が感情的になっているとき、その言葉ではなく、心の奥にある気持ちに耳を傾けてみてください。怒りの奥には不安や悲しみが、批判の奥には理解されたい想いがあることが多いものです。",
+                section2Title: "自分の反応を観察する",
+                section2Content: "相手の言動に心が乱れたとき、一度深呼吸をして「今、私はどんな気持ちになっているだろう」と自分自身を観察してみてください。感情に飲み込まれず、適切な対応ができるようになります。",
+                section3Title: "",
+                section3Content: "",
+                closingMessage: "「理解することと同意することは違います。\n相手を理解しようとする心が、関係性を深めていくのです。」"
+            },
+            day7: {
+                subject: "【人生の道標】一週間の振り返りと感謝",
+                previewText: "一週間お付き合いいただき、心から感謝申し上げます",
+                headerTitle: "一週間の歩みと感謝",
+                mainContent: "{firstName} 様、一週間お付き合いいただき、心から感謝申し上げます。\n\nこの数日間で、少しでも心に静けさや気づきが生まれたでしょうか。小さな変化でも、それは大きな一歩です。",
+                section1Title: "これからも心に留めていただきたいこと",
+                section1Content: "・完璧を求めず、今この瞬間を大切にすること\n・小さな感謝を見つける習慣を続けること\n・心が乱れても、それに気づく自分を褒めること\n・他者との関わりの中で、理解する心を持ち続けること",
+                section2Title: "",
+                section2Content: "",
+                section3Title: "",
+                section3Content: "",
+                closingMessage: "人生という道のりで、時には迷うこともあるでしょう。そんなとき、ここでお伝えした智慧を思い出していただければ幸いです。\n\n今後も時々、心の栄養となるメッセージをお届けいたします。\n引き続き、どうぞよろしくお願いいたします。"
+            }
+        };
+
+        // タブ切り替え
+        function showTab(tabName) {
+            // すべてのタブコンテンツを隠す
+            document.getElementById('basicContent').classList.add('hidden');
+            document.getElementById('contentArea').classList.add('hidden');
+            document.getElementById('advancedContent').classList.add('hidden');
+            
+            // すべてのタブのスタイルをリセット
+            document.getElementById('basicTab').className = 'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700';
+            document.getElementById('contentTab').className = 'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700';
+            document.getElementById('advancedTab').className = 'border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700';
+            
+            // 選択されたタブを表示
+            if (tabName === 'basic') {
+                document.getElementById('basicContent').classList.remove('hidden');
+                document.getElementById('basicTab').className = 'border-b-2 border-green-500 py-2 px-1 text-sm font-medium text-green-600';
+            } else if (tabName === 'content') {
+                document.getElementById('contentArea').classList.remove('hidden');
+                document.getElementById('contentTab').className = 'border-b-2 border-green-500 py-2 px-1 text-sm font-medium text-green-600';
+            } else if (tabName === 'advanced') {
+                document.getElementById('advancedContent').classList.remove('hidden');
+                document.getElementById('advancedTab').className = 'border-b-2 border-green-500 py-2 px-1 text-sm font-medium text-green-600';
+            }
+        }
+
+        // 初期化
+        window.onload = function() {
+            loadTemplate();
+            showTab('basic');
+        };
+
+        // テンプレート読み込み
+        function loadTemplate() {
+            const templateId = document.getElementById('templateSelect').value;
+            const template = templates[templateId];
+            
+            document.getElementById('subject').value = template.subject;
+            document.getElementById('previewText').value = template.previewText;
+            document.getElementById('headerTitle').value = template.headerTitle;
+            document.getElementById('mainContent').value = template.mainContent;
+            document.getElementById('section1Title').value = template.section1Title;
+            document.getElementById('section1Content').value = template.section1Content;
+            document.getElementById('section2Title').value = template.section2Title;
+            document.getElementById('section2Content').value = template.section2Content;
+            document.getElementById('section3Title').value = template.section3Title;
+            document.getElementById('section3Content').value = template.section3Content;
+            document.getElementById('closingMessage').value = template.closingMessage;
+            
+            updatePreview();
+        }
+
+        // プレビュー更新
+        function updatePreview() {
+            const subject = document.getElementById('subject').value;
+            const headerTitle = document.getElementById('headerTitle').value;
+            const mainContent = document.getElementById('mainContent').value
+                .replace(/\n/g, '<br>')
+                .replace(/{firstName}/g, '田中')
+                .replace(/{lastName}/g, '太郎');
+            
+            const section1Title = document.getElementById('section1Title').value;
+            const section1Content = document.getElementById('section1Content').value.replace(/\n/g, '<br>');
+            const section2Title = document.getElementById('section2Title').value;
+            const section2Content = document.getElementById('section2Content').value.replace(/\n/g, '<br>');
+            const section3Title = document.getElementById('section3Title').value;
+            const section3Content = document.getElementById('section3Content').value.replace(/\n/g, '<br>');
+            const closingMessage = document.getElementById('closingMessage').value.replace(/\n/g, '<br>');
+            
+            document.getElementById('previewSubject').textContent = subject;
+            
+            let htmlContent = '';
+            
+            if (headerTitle) {
+                htmlContent += `<h2 style="color: #2C5F41; font-size: 20px; margin-bottom: 20px;">${headerTitle}</h2>`;
+            }
+            
+            if (mainContent) {
+                htmlContent += `<p style="color: #333; line-height: 1.7; margin-bottom: 25px;">${mainContent}</p>`;
+            }
+            
+            if (section1Title && section1Content) {
+                htmlContent += `<div class="section-box">
+                    <h3 style="color: #2C5F41; font-size: 16px; margin-bottom: 15px;">${section1Title}</h3>
+                    <p style="color: #333; line-height: 1.6;">${section1Content}</p>
+                </div>`;
+            }
+            
+            if (section2Title && section2Content) {
+                htmlContent += `<div class="section-box">
+                    <h3 style="color: #2C5F41; font-size: 16px; margin-bottom: 15px;">${section2Title}</h3>
+                    <p style="color: #333; line-height: 1.6;">${section2Content}</p>
+                </div>`;
+            }
+            
+            if (section3Title && section3Content) {
+                htmlContent += `<div class="section-box">
+                    <h3 style="color: #2C5F41; font-size: 16px; margin-bottom: 15px;">${section3Title}</h3>
+                    <p style="color: #333; line-height: 1.6;">${section3Content}</p>
+                </div>`;
+            }
+            
+            if (closingMessage) {
+                htmlContent += `<p style="color: #333; line-height: 1.7; margin-top: 25px;">${closingMessage}</p>`;
+            }
+            
+            document.getElementById('emailPreview').innerHTML = htmlContent;
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleString('ja-JP');
+        }
+
+        // Google Sheetsに保存
+        async function saveToSheets() {
+            const templateId = document.getElementById('templateSelect').value;
+            const data = {
+                templateId: templateId,
+                subject: document.getElementById('subject').value,
+                previewText: document.getElementById('previewText').value,
+                headerTitle: document.getElementById('headerTitle').value,
+                mainContent: document.getElementById('mainContent').value,
+                section1Title: document.getElementById('section1Title').value,
+                section1Content: document.getElementById('section1Content').value,
+                section2Title: document.getElementById('section2Title').value,
+                section2Content: document.getElementById('section2Content').value,
+                section3Title: document.getElementById('section3Title').value,
+                section3Content: document.getElementById('section3Content').value,
+                closingMessage: document.getElementById('closingMessage').value,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            try {
+                const response = await fetch('/api/email-templates', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    showNotification('✅ Google Sheetsに保存しました！', 'success');
+                } else {
+                    throw new Error('保存に失敗しました');
+                }
+            } catch (error) {
+                showNotification('❌ 保存エラー: ' + error.message, 'error');
+            }
+        }
+
+        // Google Sheetsから同期
+        async function syncFromSheets() {
+            try {
+                const templateId = document.getElementById('templateSelect').value;
+                const response = await fetch(`/api/email-templates?templateId=${templateId}`);
+                
+                if (response.ok) {
+                    const template = await response.json();
+                    // フォームに反映
+                    document.getElementById('subject').value = template.subject || '';
+                    document.getElementById('previewText').value = template.previewText || '';
+                    document.getElementById('headerTitle').value = template.headerTitle || '';
+                    document.getElementById('mainContent').value = template.mainContent || '';
+                    document.getElementById('section1Title').value = template.section1Title || '';
+                    document.getElementById('section1Content').value = template.section1Content || '';
+                    document.getElementById('section2Title').value = template.section2Title || '';
+                    document.getElementById('section2Content').value = template.section2Content || '';
+                    document.getElementById('section3Title').value = template.section3Title || '';
+                    document.getElementById('section3Content').value = template.section3Content || '';
+                    document.getElementById('closingMessage').value = template.closingMessage || '';
+                    
+                    updatePreview();
+                    showNotification('🔄 Google Sheetsから同期しました！', 'success');
+                } else {
+                    throw new Error('同期に失敗しました');
+                }
+            } catch (error) {
+                showNotification('❌ 同期エラー: ' + error.message, 'error');
+            }
+        }
+
+        // テストメール送信
+        async function sendTestEmail() {
+            const testEmail = prompt("テスト送信先メールアドレスを入力してください:", "");
+            const subject = document.getElementById("templateSubject").value;
+            const htmlContent = document.getElementById("templateContent").value;
+            
+            if (!testEmail) return;
+            if (!subject || !htmlContent) {
+                alert("件名と本文を入力してください");
+                return;
+            }
+            
+            fetch("/api/admin/send-test-email", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: testEmail,
+                    subject: subject,
+                    htmlContent: htmlContent
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showNotification(`📨 ${testEmail} にテストメールを送信しました！`, "success");
+                } else {
+                    throw new Error(result.error || "送信に失敗しました");
+                }
+            })
+            .catch(error => {
+                console.error("テスト送信エラー:", error);
+                showNotification(`❌ 送信に失敗しました: ${error.message}`, "error");
+            });
+            const templateId = document.getElementById('templateSelect').value;
+            const testEmail = prompt('テスト送信先メールアドレスを入力してください:', '実際のメールアドレスを入力');
+            
+            if (!testEmail) return;
+            
+            try {
+                const response = await fetch('/api/email-templates', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        templateId: templateId,
+                        email: testEmail,
+                        firstName: 'テスト',
+                        lastName: 'ユーザー'
+                    })
+                });
+                
+                if (response.ok) {
+                    showNotification(`📨 ${testEmail} にテストメールを送信しました！`, 'success');
+                } else {
+                    throw new Error('送信に失敗しました');
+                }
+            } catch (error) {
+                showNotification('❌ 送信エラー: ' + error.message, 'error');
+            }
+        }
+
+        // 通知表示
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+                type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
