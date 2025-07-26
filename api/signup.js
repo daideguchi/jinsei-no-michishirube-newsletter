@@ -89,7 +89,30 @@ export default async function handler(req, res) {
       console.warn('Google Sheets sync failed:', sheetsError);
     }
 
-    // 3. Backup to Formspree
+    // 3. Send to Google Apps Script (メルマガ管理システム)
+    try {
+      const gasWebhookUrl = process.env.GAS_WEBHOOK_URL;
+      if (gasWebhookUrl) {
+        await fetch(gasWebhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            source: 'newsletter_form',
+            timestamp: new Date().toISOString()
+          })
+        });
+        console.log('✅ GAS連携完了');
+      }
+    } catch (gasError) {
+      console.warn('GAS連携失敗:', gasError);
+    }
+
+    // 4. Backup to Formspree
     try {
       await fetch('https://formspree.io/f/xbljnpov', {
         method: 'POST',
@@ -109,7 +132,7 @@ export default async function handler(req, res) {
       console.warn('Formspree backup failed:', formspreeError);
     }
 
-    // 4. Send welcome email via Brevo (force send for all cases)
+    // 5. Send welcome email via Brevo (force send for all cases)
     if (true) {
       try {
         await fetch('https://api.brevo.com/v3/smtp/email', {
@@ -122,7 +145,7 @@ export default async function handler(req, res) {
           body: JSON.stringify({
             sender: {
               name: '人生の道標',
-              email: 'daideguchisho@gmail.com'
+              email: 'dd.1107.11107@gmail.com'
             },
             to: [{
               email: email,
