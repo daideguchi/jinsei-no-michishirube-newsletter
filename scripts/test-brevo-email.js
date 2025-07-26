@@ -1,7 +1,8 @@
 // Brevoメール送信テストスクリプト
 // 使用方法: node scripts/test-brevo-email.js
 
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 async function testBrevoEmail() {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;

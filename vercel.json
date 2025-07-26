@@ -4,8 +4,17 @@
   "functions": {
     "api/signup.js": {
       "maxDuration": 30
+    },
+    "api/send-scheduled-emails.js": {
+      "maxDuration": 60
     }
   },
+  "crons": [
+    {
+      "path": "/api/send-scheduled-emails",
+      "schedule": "0 10 * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/",

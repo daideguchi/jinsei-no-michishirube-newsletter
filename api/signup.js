@@ -56,14 +56,17 @@ export default async function handler(req, res) {
 
     console.log('Brevo response status:', brevoResponse.status);
 
-    // 2. Add to Google Sheets
+    // 2. Brevoリスト追加完了確認
+    console.log('Brevo登録完了:', brevoResponse.status);
+
+    // 3. Google Sheetsに登録者データを自動保存
     try {
-      const SHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2PztM';
-      const GOOGLE_SHEETS_API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
+      const SHEET_ID = process.env.GOOGLE_SHEET_ID || '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2PztM';
+      const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
       
-      if (GOOGLE_SHEETS_API_KEY) {
-        const sheetsResponse = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1:append?valueInputOption=RAW&key=${GOOGLE_SHEETS_API_KEY}`,
+      if (API_KEY && SHEET_ID) {
+        const response = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1:append?valueInputOption=RAW&key=${API_KEY}`,
           {
             method: 'POST',
             headers: {
@@ -76,40 +79,24 @@ export default async function handler(req, res) {
                 lastName,
                 new Date().toISOString(),
                 'newsletter_form',
-                'pending', // status
-                '', // list_name
-                '' // step_status
+                'active', // Status
+                0, // CurrentStep
+                '', // LastEmailSent
+                0, // TotalEmailsSent
+                '' // Tags
               ]]
             })
           }
         );
-        console.log('Google Sheets response:', sheetsResponse.status);
+        
+        if (response.ok) {
+          console.log('✅ Google Sheets自動保存完了');
+        } else {
+          console.warn('Google Sheets保存失敗:', response.status);
+        }
       }
     } catch (sheetsError) {
-      console.warn('Google Sheets sync failed:', sheetsError);
-    }
-
-    // 3. Send to Google Apps Script (メルマガ管理システム)
-    try {
-      const gasWebhookUrl = process.env.GAS_WEBHOOK_URL;
-      if (gasWebhookUrl) {
-        await fetch(gasWebhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            email,
-            source: 'newsletter_form',
-            timestamp: new Date().toISOString()
-          })
-        });
-        console.log('✅ GAS連携完了');
-      }
-    } catch (gasError) {
-      console.warn('GAS連携失敗:', gasError);
+      console.warn('Google Sheets自動保存失敗:', sheetsError);
     }
 
     // 4. Backup to Formspree
